@@ -1,0 +1,29 @@
+<?php
+
+namespace Admailer\Repositories;
+
+
+use Admailer\Models\Ad;
+use Admailer\Models\Advertiser;
+use Admailer\Models\Campaign;
+use Admailer\Models\Product;
+
+class AdRepository {
+
+    public function all() {
+        return Ad::with(['organisation', 'product', 'camapign'])->organisation()->get();
+    }
+
+    public function advertisers(){
+        return Advertiser::organisation()->lists('name', 'id');
+    }
+
+    public function products($advertiser_id){
+        return Product::where('advertiser_id', $advertiser_id)->lists('name', 'id');
+    }
+
+    public function campaigns($advertiser_id){
+        return Campaign::where('advertiser_id', $advertiser_id)->lists('name', 'id');
+    }
+
+}

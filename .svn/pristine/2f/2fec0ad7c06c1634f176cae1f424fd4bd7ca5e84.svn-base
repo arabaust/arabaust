@@ -1,0 +1,9 @@
+<aside id="sidebar">
+    <div class="sidebar-inner">
+        <div class="si-inner">
+            <ul class="main-menu">
+                {!! renderMenu() !!}
+            </ul>
+        </div>
+    </div>
+</aside>

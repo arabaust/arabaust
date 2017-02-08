@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::open(['method' => 'POST', 'url' => 'stationgroups', 'class' => 'form-horizontal']) !!}
+            <div class="card-header">
+                <h2>Add a Group</h2>
+            </div>
+
+            @include('stationgroups.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

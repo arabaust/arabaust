@@ -1,0 +1,42 @@
+<?php
+
+namespace Admailer\Listeners;
+
+use Admailer\Events\AdWasSent;
+use Illuminate\Contracts\Mail\Mailer;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class AdSender
+{
+    /**
+     * @var \Illuminate\Contracts\Mail\Mailer
+     */
+    private $mailer;
+
+    /**
+     * Create the event listener.
+     *
+     * @param \Illuminate\Contracts\Mail\Mailer $mailer
+     */
+    public function __construct(Mailer $mailer)
+    {
+        //
+        $this->mailer = $mailer;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  AdWasSent  $event
+     * @return void
+     */
+    public function handle(AdWasSent $event)
+    {
+        $ad = $event->ad;
+
+        $this->mailer->send('emails.sendAd', compact('ad'), function ($mail) use ($ad) {
+            $mail->to()->subject();
+        });
+    }
+}

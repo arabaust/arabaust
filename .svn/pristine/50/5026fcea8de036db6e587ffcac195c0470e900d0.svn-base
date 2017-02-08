@@ -1,0 +1,39 @@
+<div class="card-body card-padding">
+
+    @include('partials.form-errors')
+    <div class="form-group">
+        {!! Form::label('advertiser_id', 'Client:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::select('advertiser_id', $advertisers, null, ['class' => 'form-control input-sm tag-select'])
+                !!}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('name', 'Product Name:', ['class' => 'col-sm-2 control-label']) !!}
+
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::text('name', null, ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('description', 'Description:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::textarea('description', null, ['class' => 'form-control auto-size', 'rows' => 1]) !!}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+            <a class="btn btn-info btn-sm" href="{{ url('products') }}">Back</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Http\Requests\OrganisationRequest;
+use Admailer\Models\Organisation;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+
+class OrganisationController extends Controller
+{
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $organisations = Organisation::all();
+        return view('organisations.index', compact('organisations'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return view('organisations.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param OrganisationRequest $request
+     * @return Response
+     */
+    public function store(OrganisationRequest $request)
+    {
+        Organisation::create($request->all());
+        return redirect('organisation');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $organisation = Organisation::findOrFail($id);
+
+        return view('organisations.edit', compact('organisation'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @param OrganisationRequest $request
+     * @return Response
+     */
+    public function update($id, OrganisationRequest $request)
+    {
+        Organisation::findOrFail($id)->update($request->all());
+        flash()->success('Organisation updated!');
+        return redirect('organisations');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        return Organisation::destroy($id);
+    }
+}

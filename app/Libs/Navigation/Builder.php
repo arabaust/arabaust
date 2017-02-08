@@ -1,0 +1,131 @@
+<?php namespace Admailer\Libs\Navigation;
+
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
+
+class Builder
+{
+
+    private $menuItems = [];
+    private $routes = NULL;
+    private $user = NULL;
+
+    public function __construct(Arr $arr, Request $request, Router $router)
+    {
+        $this->arr = $arr;
+        $this->request = $request;
+        $this->user = $request->user();
+        $this->router = $router;
+        $this->routes = $router->getRoutes();
+    }
+
+    /**
+     * Extract all top level menu items from routes
+     *
+     * @return Array A multi-dementional array
+     */
+    public function build()
+    {
+        foreach ($this->routes->getIterator() as $it) {
+            $action = $it->getAction();
+
+            if (!$this->forbidden($action) && $item = $this->arr->get($action, 'menuItem')) {
+
+                $routeName = $this->arr->get($action, 'as');
+                    // print_r($item);die;
+                if(@$item['sub']){
+                }
+                $this->menuItems[$routeName] = array('icon' => @$item['icon'], 'title' => @$item['title'], 'sub' => (!empty(@$item['sub'])) ? @$item['sub']['title'] : '' );
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Check if current route is hidden to current user role
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return Boolean true/false
+     */
+    protected function forbidden($action)
+    {
+        if (isset($action['except'])) {
+            return $action['except'] == $this->user->roles->fetch('role_slug');
+        }
+
+        return false;
+    }
+
+    /**
+     * Render all HTML li tags
+     *
+     * @param  Array $menuItems
+     * @param  string $itemView View name to generate a single li
+     * @return HTML li items as String
+     */
+    public function render($itemView = 'partials.navLiTemplate')
+    {
+        $listElements = [];
+
+        foreach ($this->menuItems as $routeName => $itemArray) {
+
+            $listElements[] = $this->getListItem($routeName, $itemArray);
+        }
+
+        return join($listElements, '');
+    }
+
+    /**
+     * Build a menu item by checking the permissions.
+     *
+     * @param  String $routeName Name of the route to generate link
+     * @param  Array $itemArray List of route's menuItem array
+     * @return HTML li Element as menu item
+     */
+    protected function getListItem($routeName, $itemArray)
+    {
+        $action = $this->routes->getByName($routeName)->getAction();
+
+        $permission = $this->arr->get($action, 'permission');
+
+        if ($this->canSeeMenuItem($permission)) {
+
+            $except = $this->arr->get($action, 'except');
+            if ((!isset($except) || (isset($except) && !count($except))) || (isset($except) && !$this->user->is($except))) {
+
+                $data = [
+                    'link' => route($routeName),
+                    'active' => $this->isActive($routeName),
+                    'title' => $itemArray['title'],
+                    'icon' => $itemArray['icon'],
+                    'id' => str_replace(' ', '-', strtolower($itemArray['title'])),
+                    'sub' => $itemArray['sub'],
+                ];
+
+                return view('partials.navLiTemplate', $data);
+            }
+        }
+    }
+
+    /**
+     * Mark active menu item
+     *
+     * @param  String $routeName Route Name
+     * @return HTML Attribute or NULL
+     */
+    protected function isActive($routeName)
+    {
+        return $this->router->getCurrentRoute()->getName() == $routeName ? 'active' : NULL;
+    }
+
+    protected function canSeeMenuItem($permission)
+    {
+        if (empty($permission)) return true;
+        elseif (!$this->user && empty($permission)) return true;
+        elseif ($this->user && !empty($permission) && $this->user->canSeeMenuItem($permission)) return true;
+        else return false;
+    }
+
+}

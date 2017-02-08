@@ -1,0 +1,68 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class PermissionsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('permissions')->insert([
+            'permission_title' => 'dashboard',
+            'permission_slug' => 'dashboard',
+            'permission_description' => 'can access the dashboard'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'organisations',
+            'permission_slug' => 'organisations',
+            'permission_description' => 'CRUD organisations'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'users',
+            'permission_slug' => 'users',
+            'permission_description' => 'CRUD users'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'stations',
+            'permission_slug' => 'stations',
+            'permission_description' => 'CRUD stations'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'stationgroups',
+            'permission_slug' => 'stationgroups',
+            'permission_description' => 'CRUD stationgroups'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'advertiser',
+            'permission_slug' => 'advertiser',
+            'permission_description' => 'CRUD advertiser'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'products',
+            'permission_slug' => 'products',
+            'permission_description' => 'CRUD products'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'campaigns',
+            'permission_slug' => 'campaigns',
+            'permission_description' => 'CRUD campaigns'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'ad',
+            'permission_slug' => 'ad',
+            'permission_description' => 'CRUD ad'
+        ]);
+    }
+}

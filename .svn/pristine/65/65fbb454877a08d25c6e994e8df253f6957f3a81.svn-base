@@ -1,0 +1,158 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Creators\AdCreator;
+use Admailer\Http\Requests\AdRequest;
+use Admailer\Models\Advertiser;
+use Admailer\Models\Campaign;
+use Admailer\Models\Product;
+use Admailer\Repositories\AdRepository;
+use Exception;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+use Input;
+
+class AdController extends Controller
+{
+    /**
+     * @var AdRepository
+     */
+    private $repository;
+    /**
+     * @var AdCreator
+     */
+    private $creator;
+
+    /**
+     * @param AdRepository $repository
+     * @param AdCreator $creator
+     */
+    public function __construct(AdRepository $repository, AdCreator $creator)
+    {
+
+        $this->repository = $repository;
+        $this->creator = $creator;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $ads = $this->repository->all();
+        return view('ad.index', compact('ads'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param $type
+     * @return Response
+     */
+    public function create($type)
+    {
+        $advertisers = $this->repository->advertisers();
+        $stationgroups = $this->repository->stationgroups();
+        return view('ad.create', compact(['type', 'advertisers', 'stationgroups']));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param $request
+     * @return Response
+     */
+    public function store(AdRequest $request)
+    {
+        try {
+            $this->creator->create($request->all());
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+        flash()->success('Ad created!');
+        return ['success' => true, 'url' => url('ads')];
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        $ad = $this->repository->get($id);
+        $advertisers = Advertiser::organisation()->findOrfail($ad->advertiser_id);
+        $product = Product::organisation()->findOrfail($ad->product_id);
+        $campaign = Campaign::organisation()->findOrfail($ad->campaign_id);
+        $files = $this->repository->getMedia($id);
+        $stations_emails = $this->repository->stationsEmails($id);
+//        dd($stations_emails);
+        return view('ad.view', compact('ad', 'advertisers', 'product', 'campaign', 'files',  'stations_emails'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $ad = $this->repository->get($id);
+        $advertisers = $this->repository->advertisers();
+        $stationgroups = $this->repository->stationgroups();
+        $recipients = $this->repository->recipients($id);
+        return view('ad.edit', compact('ad', 'advertisers', 'stationgroups', 'recipients'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @param AdRequest $request
+     * @return Response
+     */
+    public function update($id, AdRequest $request)
+    {
+        try {
+            $this->creator->update($request->all(), $id);
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine()];
+        }
+        flash()->success('Ad updated!');
+        return ['success' => true, 'url' => url('ads')];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProducts()
+    {
+        return $this->repository->products(Input::get('id'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCampaigns()
+    {
+        return $this->repository->campaigns(Input::get('id'));
+    }
+
+    public function getStations()
+    {
+        return $this->repository->stations(Input::get('id'));
+    }
+
+    public function duplicate($id)
+    {
+        $data = $this->creator->duplicate($id);
+        dd($data);
+    }
+}

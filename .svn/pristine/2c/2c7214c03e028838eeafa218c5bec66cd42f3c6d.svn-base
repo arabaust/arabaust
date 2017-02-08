@@ -1,0 +1,74 @@
+<?php
+
+namespace Admailer\Models;
+
+use Auth;
+
+class Ad extends BaseModel
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'type',
+        'title',
+        'code',
+        'message',
+        'advertiser_id',
+        'campaign_id',
+        'product_id',
+        'status',
+        'organisation_id',
+        'user_id',
+        'sent_at'
+    ];
+
+    protected $dates = ['created_at', 'updated_at', 'sent_at'];
+
+    public static function boot()
+    {
+        if (!Auth::user()) return;
+        static::creating(function ($ad) {
+            $ad->organisation_id = Auth::user()->organisation_id;
+            $ad->user_id = Auth::id();
+            $ad->status = 'pending';
+        });
+    }
+
+    public function advertiser(){
+        return $this->belongsTo('Admailer\Models\Advertiser');
+    }
+
+    public function product(){
+        return $this->belongsTo('Admailer\Models\Product');
+    }
+
+    public function campaign(){
+        return $this->belongsTo('Admailer\Models\Campaign');
+    }
+
+    public function files()
+    {
+        return $this->hasMany('Admailer\Models\Media');
+    }
+
+    public function media(){
+        return $this->hasMany('Admailer\Models\Media')->where('file_type', 'media');
+    }
+
+    public function additional(){
+        return $this->hasMany('Admailer\Models\Media')->where('file_type', 'additional');
+    }
+
+    public function recipients()
+    {
+        return $this->hasMany('Admailer\Models\Recipient');
+    }
+
+    public function user(){
+        return $this->belongsTo('Admailer\Models\User');
+    }
+
+}

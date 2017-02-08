@@ -1,0 +1,31 @@
+@extends('email')
+
+@section('content')
+    <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+        {{ $ad->user->username }} sent you a set of files.
+    </p>
+    <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+        Dear {{ $value->email->station->name }},
+        <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+            {{ $ad->user->username }}, these files are related to the following advertising campaign:
+        </p>
+    </p>
+    <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+        Advertiser: {{ $ad->advertiser->name }}
+    </p>
+    <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+        Campaign: {{ $ad->campaign->name }}
+    </p>
+    <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+        Product: {{ $ad->product->name }}
+    </p>
+    <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+        Message: {{ $ad->message }}
+    </p>
+    @foreach($ad->files as $file)
+    <p style="margin-top: 0;color: #565656;font-family: sans-serif;font-size: 16px;line-height: 25px;margin-bottom: 25px">
+        Files: {{ $file->title }} -  {{ substr($file->filename, strpos($file->filename, "_") + 1) }}
+    </p>
+    @endforeach
+
+@endsection

@@ -1,0 +1,55 @@
+<?php
+
+namespace Admailer\Listeners;
+
+use Admailer\Events\AdWasSent;
+use File;
+use Illuminate\Contracts\Mail\Mailer;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Storage;
+
+class AdSender
+{
+    /**
+     * @var \Illuminate\Contracts\Mail\Mailer
+     */
+    private $mailer;
+
+    /**
+     * Create the event listener.
+     *
+     * @param \Illuminate\Contracts\Mail\Mailer $mailer
+     */
+    public function __construct(Mailer $mailer)
+    {
+        //
+        $this->mailer = $mailer;
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  AdWasSent  $event
+     * @return void
+     */
+    public function handle(AdWasSent $event)
+    {
+        $ad = $event->ad;
+
+        $additional_file = $ad->files->where('file_type', 'additional')->first();
+        $additional_subject = (isset($additional_file->description)) ? '(' . $additional_file->description  . ')' : '';
+
+        foreach($ad->recipients as $value){
+            $this->mailer->send('emails.sendAd', compact('ad', 'value'), function ($mail) use ($ad, $value, $additional_subject) {
+                $mail->to($value->email->email)
+                    ->subject('Target McConnells - ' . $ad->user->username . ' sent you ' . $ad->advertiser->name . ' ad ' . $additional_subject);
+
+                    foreach($ad->files as $file){
+                        $full_path = public_path() . '/' . $file->ad_id . '/' . $file->filename;
+                        $mail->attachData($full_path, $file->filename);
+                    }
+            });
+        }
+    }
+}

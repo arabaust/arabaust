@@ -1,0 +1,78 @@
+<?php
+
+namespace Admailer\Creators;
+
+
+use Admailer\Models\Ad;
+use Admailer\Models\Media;
+use Admailer\Models\Recipient;
+use Admailer\Models\StationEmail;
+
+class AdCreator
+{
+
+    /**
+     * Create an ad
+     *
+     * @param $request
+     */
+    public function create($request)
+    {
+
+        $media_files = [];
+        $additional_files = [];
+
+        foreach ($request['media'] as $key => & $media) {
+            if (!is_null($media['filename'])) {
+                $media_files[] = $media['filename'];
+                $request['media'][$key]['filename'] = time() . '_' . $media['filename']->getClientOriginalName();
+                $request['media'][$key]['file_type'] = 'media';
+            } else {
+                unset($request['media'][$key]);
+            }
+        }
+
+        foreach ($request['additional'] as $key => & $additional) {
+            if (!is_null($additional['filename'])) {
+                $additional_files[] = $additional['filename'];
+                $request['additional'][$key]['filename'] = time() . '_' . $additional['filename']->getClientOriginalName();
+                $request['additional'][$key]['file_type'] = 'additional';
+            } else {
+                unset($request['additional'][$key]);
+            }
+        }
+
+        $ad = Ad::create($request);
+
+        $ad->files()->saveMany(array_map(function ($file) {
+            return new Media($file);
+        }, $request['media']));
+
+        $ad->files()->saveMany(array_map(function ($file) {
+            return new Media($file);
+        }, $request['additional']));
+
+
+        $email_ids = StationEmail::whereIn('station_id', $request['stations'])->get();
+        $recipients = [];
+
+        foreach ($email_ids as $email) {
+            $recipients[] = new Recipient([
+                'ad_id' => $ad->id,
+                'station_email_id' => $email->id,
+            ]);
+        }
+
+        $ad->recipients()->saveMany($recipients);
+
+        foreach ($media_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['media'][$key]['filename']);
+        }
+
+        foreach ($additional_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['additional'][$key]['filename']);
+        }
+
+    }
+
+}

@@ -1,0 +1,164 @@
+<?php
+
+namespace Admailer\Creators;
+
+
+use Admailer\Models\Ad;
+use Admailer\Models\Media;
+use Admailer\Models\Recipient;
+use Admailer\Models\StationEmail;
+
+class AdCreator
+{
+
+    /**
+     * Create an ad
+     *
+     * @param $request
+     */
+    public function create($request)
+    {
+
+        $media_files = [];
+        $additional_files = [];
+
+        foreach ($request['media'] as $key => & $media) {
+            if (!is_null($media['filename'])) {
+                $media_files[] = $media['filename'];
+                $request['media'][$key]['filename'] = time() . '_' . $media['filename']->getClientOriginalName();
+                $request['media'][$key]['file_type'] = 'media';
+            } else {
+                unset($request['media'][$key]);
+            }
+        }
+
+        foreach ($request['additional'] as $key => & $additional) {
+            if (!is_null($additional['filename'])) {
+                $additional_files[] = $additional['filename'];
+                $request['additional'][$key]['filename'] = time() . '_' . $additional['filename']->getClientOriginalName();
+                $request['additional'][$key]['file_type'] = 'additional';
+            } else {
+                unset($request['additional'][$key]);
+            }
+        }
+
+        $ad = Ad::create($request);
+
+        $ad->files()->saveMany(array_map(function ($file) {
+            return new Media($file);
+        }, $request['media']));
+
+        $ad->files()->saveMany(array_map(function ($file) {
+            return new Media($file);
+        }, $request['additional']));
+
+
+        $email_ids = StationEmail::whereIn('station_id', $request['stations'])->get();
+        $recipients = [];
+
+        foreach ($email_ids as $email) {
+            $recipients[] = new Recipient([
+                'ad_id' => $ad->id,
+                'station_email_id' => $email->id,
+            ]);
+        }
+
+        $ad->recipients()->saveMany($recipients);
+
+        foreach ($media_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['media'][$key]['filename']);
+        }
+
+        foreach ($additional_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['additional'][$key]['filename']);
+        }
+
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     */
+    public function update($request, $id)
+    {
+        $media_ids = [];
+        $additional_ids = [];
+        $media_files = [];
+        $additional_files = [];
+//        dd($request);
+        //Media
+        foreach ($request['media'] as $key => & $media) {
+            if (!is_null($media['filename'])) {
+                $media_files[] = $media['filename'];
+                $media_data = new Media();
+                $media_data->ad_id = $id;
+                $media_data->filename = time() . '_' . $media['filename']->getClientOriginalName();
+                $media_data->file_type = 'media';
+                $media_data->code = $request['media'][$key]['code'];
+                $media_data->title = $request['media'][$key]['title'];
+                $media_data->duration = $request['media'][$key]['duration'];
+                $media_data->first_transmission_date = $request['media'][$key]['first_transmission_date'];
+                $media_data->last_transmission_date = $request['media'][$key]['last_transmission_date'];
+                $media_data->voice_over = $request['media'][$key]['voice_over'];
+                $media_data->studio = $request['media'][$key]['studio'];
+                $media_data->recording_date = $request['media'][$key]['recording_date'];
+                $media_data->producer = $request['media'][$key]['producer'];
+                $media_data->copywriter = $request['media'][$key]['copywriter'];
+                $media_data->music = $request['media'][$key]['music'];
+                $media_data->save();
+                array_push($media_ids, $media_data->id);
+
+            } else {
+                if(in_array($request['media'][$key]['id'], $media_ids, true))
+                    Media::delete($request['media'][$key]['id']);
+            }
+        }
+        //Additional
+        foreach ($request['additional'] as $key => & $additional) {
+            if (!is_null($additional['filename'])) {
+                $additional_files[] = $media['filename'];
+                $additional_data = new Media();
+                $additional_data->ad_id = $id;
+                $additional_data->filename = time() . '_' . $additional['filename']->getClientOriginalName();
+                $additional_data->file_type = 'additional';
+                $additional_data->description = $request['additional'][$key]['description'];
+                $additional_data->save();
+                array_push($additional_ids, $additional_data->id);
+
+            } else {
+                if(in_array($request['additional'][$key]['id'], $additional_ids, true))
+                    Media::delete($request['media'][$key]['id']);
+            }
+        }
+
+        $ad = Ad::findOrFail($id);
+        $ad->update($request);
+
+        //Recipient
+        $recipients = [];
+        $email_ids = StationEmail::whereIn('station_id', $request['stations'])->get();
+        $recipient_data = Recipient::where('ad_id', $ad->id)->get();
+
+        foreach ($email_ids as $email) {
+            if(!in_array($email->id, $recipient_data, false)){
+                $recipients[] = new Recipient([
+                    'ad_id' => $ad->id,
+                    'station_email_id' => $email->id,
+                ]);
+            }
+
+        }
+        $ad->recipients()->saveMany($recipients);
+
+        foreach ($media_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['media'][$key]['filename']);
+        }
+
+        foreach ($additional_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['additional'][$key]['filename']);
+        }
+
+
+    }
+
+}

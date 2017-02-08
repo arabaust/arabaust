@@ -1,0 +1,102 @@
+<?php
+get('/', ['as' => 'home', 'uses' => function() {
+    return view('index');
+}]);
+
+// Authentication routes...
+get('login', 'Auth\AuthController@getLogin');
+post('login', 'Auth\AuthController@postLogin');
+get('logout', 'Auth\AuthController@getLogout');
+
+// Password reset routes...
+post('password/forgot', 'Auth\PasswordController@postEmail');
+get('password/reset/{token}', 'Auth\PasswordController@getReset');
+post('password/reset', 'Auth\PasswordController@postReset');
+
+// Protected Routes by auth and acl middleware
+Route::group(['middleware' => ['auth', 'acl']], function () {
+    get('dashboard', [
+        'uses' => 'DashboardController@index',
+        'as' => 'dashboard',
+        'permission' => 'dashboard',
+        'menuItem' => ['icon' => 'md md-dashboard', 'title' => 'Dashboard']
+    ]);
+
+    // Organisations CRUD
+
+    get('organisations', [
+        'uses' => 'OrganisationController@index',
+        'as' => 'organisations.index',
+        'permission' => 'organisations',
+        'menuItem' => ['icon' => 'md md-group-work', 'title' => 'Organisations']
+    ]);
+
+    get('organisations/create', [
+        'uses' => 'OrganisationController@create',
+        'as' => 'organisations.create',
+        'permission' => 'organisations'
+    ]);
+
+    post('organisations', [
+        'uses' => 'OrganisationController@store',
+        'as' => 'organisations.store',
+        'permission' => 'organisations'
+    ]);
+
+    get('organisations/{id}/edit', [
+        'uses' => 'OrganisationController@edit',
+        'as' => 'organisations.edit',
+        'permission' => 'organisations'
+    ]);
+
+    put('organisations/{id}', [
+        'uses' => 'OrganisationController@update',
+        'as' => 'organisations.update',
+        'permission' => 'organisations'
+    ]);
+
+    post('organisations/{id}/delete', [
+        'uses' => 'OrganisationController@destroy',
+        'as' => 'organisations.destroy',
+        'permission' => 'organisations'
+    ]);
+
+
+    // Users CRUD
+    get('users', [
+        'uses' => 'UsersController@index',
+        'as' => 'users.index',
+        'permission' => 'users',
+        'menuItem' => ['icon' => 'md md-people', 'title' => 'Users Management']
+    ]);
+
+    get('users/create', [
+        'uses' => 'UsersController@create',
+        'as' => 'users.create',
+        'permission' => 'users'
+    ]);
+
+    post('users', [
+        'uses' => 'UsersController@store',
+        'as' => 'users.store',
+        'permission' => 'users'
+    ]);
+
+    get('users/{id}/edit', [
+        'uses' => 'UsersController@edit',
+        'as' => 'users.edit',
+        'permission' => 'users'
+    ]);
+
+    put('users/{id}', [
+        'uses' => 'UsersController@update',
+        'as' => 'users.update',
+        'permission' => 'users'
+    ]);
+
+    post('users/{id}/delete', [
+        'uses' => 'UsersController@destroy',
+        'as' => 'users.destroy',
+        'permission' => 'users'
+    ]);
+});

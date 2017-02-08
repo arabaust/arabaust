@@ -1,0 +1,16 @@
+/vendor
+/node_modules
+/nbproject
+.env
+/_ide_helper.php
+/public/files/news
+/public/files/about_us
+/public/files/pages
+/public/files/products
+/public/files/catalog
+/public/files/categories
+/public/files/articles
+/composer.lock
+/composer.json
+/public/img
+/public/catalog

@@ -1,0 +1,192 @@
+@section('js')
+    $(document).ajaxStart(function() {
+        $('#loading-image').show();
+        var percent = 0;
+        var interval = setInterval(function() {
+            $('#loading-image .progress-bar').css('width', percent+'%');
+            percent += 10;
+            if (percent > 100) clearInterval(interval);
+        }, 100)
+    });
+
+    $(document).ajaxStop(function() {
+        $('#loading-image').hide();
+        $('#loading-image .progress-bar').css('width', '0');
+    });
+
+    $('#advertiser_id').on('change', function() {
+        var id = $(this).val();
+        $.get('/lists/products', {id : id, _token: '{{ csrf_token() }}'}, function(list){
+            $('#product_id').find('option').remove();
+            $.each(list, function(id, value) {
+                $('#product_id').append($("<option></option>")
+                .attr("value", id)
+                .text(value))
+                .trigger("chosen:updated");
+            });
+            if ($('#product_id').data('id') != '') $('#product_id').val($('#product_id').data('id')).trigger("chosen:updated");
+        });
+        $.get('/lists/campaigns', {id : id, _token: '{{ csrf_token() }}'}, function(list){
+            $('#campaign_id').find('option').remove();
+            $.each(list, function(id, value) {
+                $('#campaign_id').append($("<option></option>")
+                .attr("value", id)
+                .text(value))
+                .trigger("chosen:updated");
+            });
+            if ($('#campaign_id').data('id') != '') $('#campaign_id').val($('#campaign_id').data('id')).trigger("chosen:updated");
+        });
+    }).trigger('change');
+    $('body').on('click', '.list-group .list-group-item', function () {
+        $(this).toggleClass('active');
+    });
+    // Media Add/edit files
+    $('.add_media_files').addFiles({
+        tableId: 'media-table',
+        containerId: 'media-hidden-inputs'
+    });
+    $('.add_additional_files').addFiles({
+        tableId: 'additional-table',
+        containerId: 'additional-hidden-inputs'
+    });
+    //move left/right
+    $('.list-arrows button').click(function (e) {
+        e.preventDefault();
+        var $button = $(this), actives = '';
+        if ($button.hasClass('move-left')) {
+            actives = $('.list-right .card-body ul li.active');
+            actives.clone().appendTo('.list-left .card-body ul');
+            actives.remove();
+        } else if ($button.hasClass('move-right')) {
+            actives = $('.list-left .card-body ul li.active');
+            actives.clone().appendTo('.list-right .card-body ul');
+            actives.remove();
+        }
+        $('[name^="stations"]:not(:last)').remove();
+        $('.list-left .card-body ul li').each(function() {
+            $('[name^="stations"]:last').val($(this).data('id')).after($('[name^="stations"]:last').clone());
+        });
+        $('[name^="stations"]:last').val('');
+    });
+    // Check/Uncheck all
+    $('.dual-list .selector').click(function (e) {
+        e.preventDefault();
+        var $checkBox = $(this);
+        if (!$checkBox.hasClass('selected')) {
+            $checkBox.addClass('selected').closest('.dual-list').find('.card-body ul li:not(.active)').addClass('active');
+            $checkBox.children('i').removeClass('md-check-box-outline-blank').addClass('md-check-box');
+        } else {
+            $checkBox.removeClass('selected').closest('.dual-list').find('.card-body ul li.active').removeClass('active');
+            $checkBox.children('i').removeClass('md-check-box').addClass('md-check-box-outline-blank');
+        }
+    });
+    // Search
+    $('[name="SearchDualList"]').keyup(function (e) {
+        var code = e.keyCode || e.which;
+        if (code == '9') return;
+        if (code == '27') $(this).val(null);
+        var $rows = $(this).closest('.dual-list').find('.list-group li');
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        $rows.show().filter(function () {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf(val);
+        }).hide();
+    });
+    //Stationgroups dropdown
+    $('[name="stationgroups"]').on('change', function(e) {
+        var id = $(this).val(),
+            that = this,
+            ids = [];
+        @if(isset($ad) AND !is_null($ad->recipients))
+            @foreach($recipients as $recipient)
+                ids.push('{{ $recipient->id }}');
+            @endforeach
+        @endif
+        $.get('/lists/stations', {id : id, _token: '{{ csrf_token() }}'}, function(list){
+            $('.list-right .card-body ul').find('li').remove();
+            $.each(list, function(id, value) {
+                if ($.inArray(id, ids) == -1) $('.list-right .card-body ul').append($('<li class="list-group-item" data-id="' + id + '">' + value + '</li>'));
+            });
+        });
+    }).trigger('change');
+    // Post Form
+    $('button[type="submit"]').on('click', function(e) {
+        e.preventDefault();
+
+        var updateForm = $(this).closest('form'),
+            form = new FormData($(updateForm)[0]),
+            xhr = new window.XMLHttpRequest();
+            form.append('message', $(".html-editor").code());
+
+        $('#loading-image').show();
+
+        xhr.upload.addEventListener("progress", function (e) {
+            if (e && e.lengthComputable) {
+                p = (e.loaded / e.total);
+                var percent = Math.round(p * 1000) / 10;
+                $('#loading-image .progress-bar').css('width', percent+'%');
+            }
+        }, false);
+
+        xhr.addEventListener("readystatechange", function(e) {
+            if (this.readyState === 4) {
+                data = $.parseJSON(xhr.responseText);
+                if (data.success) {
+                    window.location = data.url;
+                } else {
+                    swal("Error!", data.error, "error");
+                    $('#loading-image').hide();
+                    $('#loading-image .progress-bar').css('width', '0');
+                }
+            }
+        }, false);
+
+        xhr.open("post", updateForm.attr('action'), true);
+        xhr.send(form);
+    });
+@endsection
+<div id="loading-image">
+    <div class="progress progress-striped active">
+        <div class="progress-bar" role="progressbar"></div>
+    </div>
+</div>
+<div class="card-body card-padding">
+    @include('partials.form-errors')
+    <div class="form-wizard-basic fw-container">
+        <div role="tabpanel" class="tab">
+            <ul class="tab-nav" role="tablist" tabindex="4" style="overflow: hidden; outline: none;">
+                <li role="presentation" class="active"><a href="#ad" aria-controls="ad" role="tab" data-toggle="tab" aria-expanded="true">Ad</a></li>
+                <li role="presentation"><a href="#media_files" aria-controls="media_files" role="tab" data-toggle="tab" aria-expanded="false">Media Files</a></li>
+                <li role="presentation"><a href="#additional_files" aria-controls="additional_files" role="tab" data-toggle="tab" aria-expanded="false">Additional Files</a></li>
+                <li role="presentation"><a href="#recipients" aria-controls="recipients" role="tab" data-toggle="tab" aria-expanded="false">Recipients</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="ad">
+                    @include('ad.form.ad')
+                </div>
+                <div role="tabpanel" class="tab-pane" id="media_files">
+                    @include('ad.form.media_files')
+                </div>
+                <div role="tabpanel" class="tab-pane" id="additional_files">
+                    @include('ad.form.additional_files')
+                </div>
+                <div role="tabpanel" class="tab-pane" id="recipients">
+                    @include('ad.form.recipients')
+                </div>
+            </div>
+        </div>
+        <ul class="fw-footer pagination wizard">
+            <li class="previous first"><a class="a-prevent" href=""><i class="md md-more-horiz"></i></a></li>
+            <li class="previous"><a class="a-prevent" href=""><i class="md md-chevron-left"></i></a></li>
+            <li class="next"><a class="a-prevent" href=""><i class="md md-chevron-right"></i></a></li>
+            <li class="next last"><a class="a-prevent" href=""><i class="md md-more-horiz"></i></a></li>
+        </ul>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+            <a class="btn btn-info btn-sm" href="{{ url('ads') }}">Back</a>
+        </div>
+    </div>
+</div>

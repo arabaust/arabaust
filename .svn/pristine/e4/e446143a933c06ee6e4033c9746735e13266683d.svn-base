@@ -1,0 +1,21 @@
+<?php
+
+namespace Admailer\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class StationEmail extends Model
+{
+    protected $table = 'station_email';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['email', 'station_id'];
+
+    public function station(){
+        return $this->belongsTo('Admailer\Models\Station');
+    }
+}

@@ -1,0 +1,99 @@
+@extends('app')
+
+@section('js')
+    var datatable = $("#data-table-command");
+    datatable.bootgrid({
+        css: {
+            icon: 'md icon',
+            iconColumns: 'md-view-module',
+            iconDown: 'md-expand-more',
+            iconRefresh: 'md-refresh',
+            iconUp: 'md-expand-less'
+        },
+        formatters: {
+            "commands": function(column, row) {
+                if (row.role == 'superadmin') return '<button class="btn btn-icon command-edit" data-row-id="' + row.id + '"><span class="md md-edit"></span></button>';
+                return '<button class="btn btn-icon command-edit" data-row-id="' + row.id + '"><span class="md md-edit"></span></button> ' +
+                '<button type="button" class="btn btn-icon command-delete" data-row-id="' + row.id + '"><span class="md md-delete"></span></button>';
+            }
+        }
+    }).on('loaded.rs.jquery.bootgrid', function() {
+        $('.command-edit').on('click', function(e) {
+            e.preventDefault()
+            window.location.href = '{{ url('users') }}/' + $(this).data('row-id') + '/edit';
+        });
+        $('.command-delete').on('click', function(e) {
+            e.preventDefault();
+            var rowId = $(this).data('row-id');
+            var url = '{{ url('users') }}/' + rowId + '/delete';
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this user!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function(){
+                $.post(url, {
+                    _token: '{{ csrf_token() }}'
+                }, function() {
+                    datatable.bootgrid('remove', [rowId]);
+                    swal("Deleted!", "The user has been deleted.", "success");
+                });
+            });
+        });
+    });
+@endsection
+
+@section('content')
+    <div class="block-header">
+        <h2>Users</h2>
+
+        <ul class="actions">
+            <li>
+                <a href="{{ url('/users/create') }}">
+                    <i class="md md-add"></i>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+        </div>
+
+        <table id="data-table-command" class="table table-striped table-vmiddle">
+            <thead>
+            <tr>
+                <th data-column-id="id" data-type="numeric" data-identifier="true">ID</th>
+                <th data-column-id="username" data-order="desc">Username</th>
+                <th data-column-id="email">Email</th>
+                <th data-column-id="first_name">First Name</th>
+                <th data-column-id="last_name">Last Name</th>
+                @if(Auth::user()->is('superadmin'))
+                    <th data-column-id="organisation">Organisation</th>
+                @endif
+                <th data-column-id="role">Role</th>
+                <th data-column-id="commands" data-formatter="commands" data-sortable="false">Commands</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($users as $user)
+                <tr>
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->username }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->first_name }}</td>
+                    <td>{{ $user->last_name }}</td>
+                    @if(Auth::user()->is('superadmin'))
+                        <td>{{ $user->organisation->name }}</td>
+                    @endif
+                    <td>{{ $user->role->role_slug }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection

@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::model($product, ['method' => 'put', 'url' => '/products/' . $product->id, 'class' => 'form-horizontal']) !!}
+            <div class="card-header">
+                <h2>Edit {{ $product->name }}</h2>
+            </div>
+
+            @include('products.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

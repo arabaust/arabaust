@@ -1,0 +1,123 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ $ad->title }}</h2>
+        </div>
+
+        <div class="card-body card-padding">
+            <div class="col-sm-6">
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Type: </strong> {{ $ad->type }}</li>
+                    <li class="list-group-item"><strong>Client: </strong>{{ $advertisers->name }}</li>
+                    <li class="list-group-item"><strong>Campaign: </strong>{{ $campaign->name }}</li>
+                </ul>
+            </div>
+            <div class="col-sm-6">
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Code : </strong>{{ $ad->code }}</li>
+                    <li class="list-group-item"><strong>Product: </strong>{{ $product->name }}</li>
+                    <li class="list-group-item"><strong>message : </strong>{{ $ad->message }}</li>
+                </ul>
+            </div>
+
+            <br/>
+            <br/>
+
+            <p class="f-500 m-b-20 c-black">Media Files</p>
+
+            <div class="panel-group" role="tablist" aria-multiselectable="true" id="media_accordion">
+                @foreach($files->where('file_type', 'media') as $key => $media)
+                    <div class="panel panel-collapse">
+                        <div class="panel-heading" role="tab" id="heading_media_{{ $key }}">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#media_accordion" href="#media_{{ $key }}" aria-expanded="true" aria-controls="media_{{ $key }}">
+                                    {{ $media->title }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="media_{{ $key }}" class="collapse {{ ($key == 0) ? 'in' : '' }}" role="tabpanel" aria-labelledby="heading_media_{{ $key }}">
+                            <div class="panel-body">
+                                <div class="col-sm-6 ">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><strong>File Name : </strong>{{ substr($media->filename, strpos($media->filename, "_") + 1) }}</li>
+                                        <li class="list-group-item"><strong>Start Date : </strong>{{ $media->first_transmission_date }}</li>
+                                        <li class="list-group-item"><strong>Duration : </strong>{{ $media->duration }}</li>
+                                        <li class="list-group-item"><strong>Voice Over : </strong>{{ $media->voice_over }}</li>
+                                        <li class="list-group-item"><strong>Recording Date : </strong>{{ $media->recording_date }}</li>
+                                        <li class="list-group-item"><strong>Copywriter : </strong>{{ $media->copywriter }}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><strong>Code : </strong>{{ $media->code }}</li>
+                                        <li class="list-group-item"><strong>End Date : </strong>{{ $media->last_transmission_date }}</li>
+                                        <li class="list-group-item"><strong>studio : </strong>{{ $media->studio }}</li>
+                                        <li class="list-group-item"><strong>Producer : </strong>{{ $media->producer }}</li>
+                                        <li class="list-group-item"><strong>Music : </strong>{{ $media->music }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <br/>
+            <br/>
+
+            <p class="f-500 m-b-20 c-black">Additional Files</p>
+
+            <div class="panel-group" role="tablist" aria-multiselectable="true" id="additional_accordion">
+                @foreach($files->where('file_type', 'additional') as $key => $additional)
+                    <div class="panel panel-collapse">
+                        <div class="panel-heading" role="tab" id="heading_additional_{{ $key }}">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#additional_accordion" href="#additional_{{ $key }}" aria-expanded="true" aria-controls="additional_{{ $key }}">
+                                    {{ substr($additional->filename, strpos($additional->filename, "_") + 1) }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="additional_{{ $key }}" class="collapse {{ ($key == 0) ? 'in' : '' }}" role="tabpanel" aria-labelledby="heading_additional_{{ $key }}">
+                            <div class="panel-body">
+                                {{ nl2br($additional->description) }}
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <br/>
+            <br/>
+
+            <p class="f-500 m-b-20 c-black">Recipients</p>
+
+            <div class="panel-group" role="tablist" aria-multiselectable="true" id="station_accordion">
+                @foreach($stations_emails as $key => $station)
+                    <div class="panel panel-collapse">
+                        <div class="panel-heading" role="tab" id="heading_station_{{ snake_case($key) }}">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#station_accordion" href="#station_{{ snake_case($key) }}" aria-expanded="true" aria-controls="station_{{ snake_case($key) }}">
+                                    {{ $key }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="station_{{ snake_case($key) }}" class="collapse {{ ($key == array_keys($stations_emails)[0]) ? 'in' : '' }}" role="tabpanel" aria-labelledby="heading_station_{{ snake_case($key) }}">
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    @foreach($station as $email)
+                                        <li class="list-group-item">{{ $email }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <a class="btn btn-info btn-sm" href="{{ url('ads') }}">Back</a>
+            <a class="btn btn-primary btn-sm" href="{{ url('ads/' . $ad->id . '/send') }}">Send</a>
+        </div>
+    </div>
+@endsection

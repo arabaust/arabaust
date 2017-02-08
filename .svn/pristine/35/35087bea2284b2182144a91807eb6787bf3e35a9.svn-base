@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class PermissionsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('permissions')->insert([
+            'permission_title' => 'dashboard',
+            'permission_slug' => 'dashboard',
+            'permission_description' => 'can access the dashboard'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'organisations',
+            'permission_slug' => 'organisations',
+            'permission_description' => 'CRUD organisations'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'users',
+            'permission_slug' => 'users',
+            'permission_description' => 'CRUD users'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'stations',
+            'permission_slug' => 'stations',
+            'permission_description' => 'CRUD stations'
+        ]);
+
+        DB::table('permissions')->insert([
+            'permission_title' => 'stationgroups',
+            'permission_slug' => 'stationgroups',
+            'permission_description' => 'CRUD stationgroups'
+        ]);
+    }
+}

@@ -1,0 +1,93 @@
+<div class="card-body card-padding">
+
+    @include('partials.form-errors')
+
+    <!-- Username Form Input -->
+    <div class="form-group">
+        {!! Form::label('username', 'Username:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::text('username', null, ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- First_name Form Input -->
+    <div class="form-group">
+        {!! Form::label('first_name', 'First Name:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::text('first_name', null, ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- Last_name Form Input -->
+    <div class="form-group">
+        {!! Form::label('last_name', 'Last Name:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::text('last_name', null, ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Form Input -->
+    <div class="form-group">
+        {!! Form::label('email', 'Email:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::email('email', null, ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Form Input -->
+    <div class="form-group">
+        {!! Form::label('password', 'Password:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::password('password', ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- Password_confirmation Form Input -->
+    <div class="form-group">
+        {!! Form::label('password_confirmation', 'Confirm Password:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::password('password_confirmation', ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    <!-- Role_id Form Input -->
+    <div class="form-group">
+        {!! Form::label('role_id', 'Role:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="fg-line">
+                {!! Form::select('role_id', $roles, null, ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    </div>
+
+    @if(Auth::user()->is('superadmin'))
+        <!-- Organisation_id Form Input -->
+        <div class="form-group">
+            {!! Form::label('organisation_id', 'Organisation:', ['class' => 'col-sm-2 control-label']) !!}
+            <div class="col-sm-10">
+                <div class="fg-line">
+                    {!! Form::select('organisation_id', $organisations, null, ['class' => 'form-control input-sm']) !!}
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+            <a class="btn btn-info btn-sm" href="{{ url('users') }}">Back</a>
+        </div>
+    </div>
+</div>

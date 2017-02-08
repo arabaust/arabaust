@@ -1,0 +1,87 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Http\Requests\ProductsRequest;
+use Admailer\Models\Advertiser;
+use Admailer\Models\Product;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+
+class ProductsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $products = Product::with('advertiser')->organisation()->get();
+        return view('products.index', compact('products'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $advertisers = Advertiser::organisation()->lists('name','id');
+        return view('products.create', compact('advertisers'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param ProductsRequest $request
+     * @return Response
+     */
+    public function store(ProductsRequest $request)
+    {
+        Product::create($request->all());
+        flash()->success('Products created!');
+        return redirect('products');
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        $advertisers = Advertiser::organisation()->lists('name','id');
+        return view('products.edit', compact('product', 'advertisers'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id, ProductsRequest $request)
+    {
+        Product::findOrFail($id)->update($request->all());
+        flash()->success('Product updated!');
+        return redirect('products');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        return Product::destroy($id);
+    }
+}

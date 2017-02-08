@@ -1,0 +1,64 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Creators\UserCreator;
+use Admailer\Http\Requests\ProfileRequest;
+use Admailer\Models\User;
+use Auth;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+
+class ProfileController extends Controller
+{
+    /**
+     * @var UserCreator
+     */
+    private $profileCreator;
+
+    public function __construct(UserCreator $profileCreator)
+    {
+        $this->profileCreator = $profileCreator;
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $profile = User::findOrFail(Auth::user()->id);
+        return view('profile.index', compact('profile'));
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $profile = User::findOrFail(Auth::user()->id);
+        return view('profile.edit', compact('profile'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @param ProfileRequest $request
+     * @return Response
+     */
+    public function update($id, ProfileRequest $request)
+    {
+        $this->profileCreator->update($request);
+        flash()->success('Profile updated!');
+        return redirect('profile');
+    }
+
+
+}

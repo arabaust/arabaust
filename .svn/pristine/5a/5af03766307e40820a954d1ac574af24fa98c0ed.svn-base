@@ -1,0 +1,29 @@
+<?php
+
+namespace Admailer\Listeners;
+
+class AdEventHandler {
+
+    /**
+     * Handle ad send.
+     * @param $event
+     */
+    public function onAdSend($event)
+    {
+        dd($event);
+    }
+
+    /**
+     * Register the listeners for the subscriber.
+     *
+     * @param  Illuminate\Events\Dispatcher  $events
+     * @return void
+     */
+    public function subscribe($events)
+    {
+        dd($events->listen('emails.ad', 'AdEventHandler@onAdSend'));
+        $events->listen('ad', 'AdEventHandler@onAdSend');
+//        $events->listen('Admailer\Events\AdSender', 'AdEventHandler@onAdSend');
+    }
+
+}

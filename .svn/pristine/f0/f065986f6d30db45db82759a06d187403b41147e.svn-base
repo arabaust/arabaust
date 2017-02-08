@@ -1,0 +1,17 @@
+<?php
+
+namespace Admailer\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class StationType extends Model
+{
+    protected $table = 'station_type';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['type', 'station_id'];
+}

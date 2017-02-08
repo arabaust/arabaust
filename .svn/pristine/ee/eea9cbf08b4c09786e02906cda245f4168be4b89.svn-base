@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class TempSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('permissions')->insert([
+            'permission_title' => 'products',
+            'permission_slug' => 'products',
+            'permission_description' => 'CRUD products'
+        ]);
+
+        DB::table('permission_role')->insert([
+            'permission_id' => '7',
+            'role_id' => '2'
+        ]);
+
+        DB::table('permission_role')->insert([
+            'permission_id' => '7',
+            'role_id' => '3'
+        ]);
+
+    }
+}

@@ -1,0 +1,26 @@
+<?php
+
+namespace Admailer\Creators;
+
+
+use Admailer\Models\User;
+
+class UserCreator {
+
+    public function store($request){
+        $data = $request->all();
+        if ($request->has('password')) {
+            $data['password'] = bcrypt($request->input('password'));
+        }
+        return User::create($data);
+    }
+
+    public function update($request){
+        $data = $request->all();
+        if ($request->has('password')) {
+            $data['password'] = bcrypt($request->input('password'));
+        }
+        return User::findOrFail($request->route('id'))->update($data);
+    }
+
+}

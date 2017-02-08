@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::model($organisation, ['method' => 'put', 'url' => '/organisations/' . $organisation->id, 'class' => 'form-horizontal']) !!}
+            <div class="card-header">
+                <h2>Edit {{ $organisation->name }}</h2>
+            </div>
+
+            @include('organisations.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

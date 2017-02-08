@@ -1,0 +1,39 @@
+<?php
+
+// Organisations CRUD
+get('organisations', [
+    'uses' => 'OrganisationController@index',
+    'as' => 'organisations.index',
+    'permission' => 'organisations',
+    'menuItem' => ['icon' => 'md md-group-work', 'title' => 'Organisations']
+]);
+
+get('organisations/create', [
+    'uses' => 'OrganisationController@create',
+    'as' => 'organisations.create',
+    'permission' => 'organisations'
+]);
+
+post('organisations', [
+    'uses' => 'OrganisationController@store',
+    'as' => 'organisations.store',
+    'permission' => 'organisations'
+]);
+
+get('organisations/{id}/edit', [
+    'uses' => 'OrganisationController@edit',
+    'as' => 'organisations.edit',
+    'permission' => 'organisations'
+]);
+
+put('organisations/{id}', [
+    'uses' => 'OrganisationController@update',
+    'as' => 'organisations.update',
+    'permission' => 'organisations'
+]);
+
+post('organisations/{id}/delete', [
+    'uses' => 'OrganisationController@destroy',
+    'as' => 'organisations.destroy',
+    'permission' => 'organisations'
+]);

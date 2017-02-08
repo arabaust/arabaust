@@ -1,0 +1,17 @@
+<?php
+
+namespace Admailer\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Recipient extends Model
+{
+    protected $table = 'ad_recipients';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['ad_id', 'station_email_id', 'status', 'key', 'received_at'];
+}

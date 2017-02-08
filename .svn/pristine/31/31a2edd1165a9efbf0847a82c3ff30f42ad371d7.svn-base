@@ -1,0 +1,33 @@
+<?php
+
+namespace Admailer\Handlers\Events;
+
+use Admailer\Events\AdSender;
+use Illuminate\Contracts\Mail\Mailer;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class AdWasSent implements ShouldQueue
+{
+    /**
+     * Create the event handler.
+     *
+     * @param Mailer $mailer
+     */
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
+
+    /**
+     * Handle the event.
+     *
+     * @param  AdSender  $event
+     * @return void
+     */
+    public function handle(AdSender $event)
+    {
+        dd($event);
+    }
+}

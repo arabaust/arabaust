@@ -1,0 +1,10 @@
+<?php
+/**
+* Build the top level navigation
+*
+* @return HTML list items (li) as string
+*/
+function renderMenu()
+{
+return app('Admailer\Libs\Navigation\Builder')->build()->render();
+}

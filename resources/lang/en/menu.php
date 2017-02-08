@@ -1,0 +1,38 @@
+<?php
+
+return [
+    'arabic'                => 'Arabic',
+    'english'               => 'English',
+    'dashboard'             => 'Dashboard',
+    'settings'              => 'Settings',
+    'site_settings'         => 'Site Settings',
+    'site_about'            => 'About',
+    'site_terms'            => 'Legal Acknowledgement',
+    'users'                 => 'Users',
+    'permissions'           => 'Roles & Permissions',
+    'reports'               => 'Reports',
+    'my_profile'            => 'My Profile',
+    'logout'                => 'Logout',
+    'clients'               => 'Clients',
+    'occasions'             => 'Occasions',
+    'client_occasions'      => 'Pending Occasions',
+    'specialoffers'         => 'Special Offers',
+    'cemeteries'            => 'Cemeteries',
+    'emergencies'           => 'Emergencies',
+    'client_emergencies'    => 'Pending Emergencies',
+    'client_specialoffers'  => 'Pending Special Offers',
+    'categories'              =>'Categories',
+    'products'              => 'Products',
+    'pages'                 => 'Pages',
+    'news'                  => 'News',
+    'contact'               => 'Contact Us',
+    'aboutus'               => 'About Us',
+    'import'                => 'Import products' ,
+    'media'                 => 'Media',
+    'address'               => 'Address',
+    'catogery'              => 'Categories',
+    'articles'              => 'Articles',
+    'gallary'               =>'gallary',
+
+
+];

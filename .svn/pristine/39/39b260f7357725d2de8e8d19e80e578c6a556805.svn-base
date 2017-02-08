@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class DbSeed extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory('Admailer\Models\Advertiser', 10)->create()->each(function($advertiser) {
+            for ($i = 0; $i < 10; $i++) {
+                $advertiser->products()->save(factory('Admailer\Models\Product')->make());
+                $advertiser->campaigns()->save(factory('Admailer\Models\Campaign')->make());
+            }
+        });
+
+        factory('Admailer\Models\StationGroup', 10)->create()->each(function($group) {
+            $group->stations()->sync(factory('Admailer\Models\Station', 10)->create()->each(function($station) {
+                $types = [];
+                $emails = [];
+                for ($i = 0; $i < 3; $i++) {
+                    if ($i != 0)
+                        $types[] = factory('Admailer\Models\StationType')->make();
+                    $emails[] = factory('Admailer\Models\StationEmail')->make();
+                }
+                $station->types()->saveMany($types);
+                $station->emails()->saveMany($emails);
+            }));
+        });
+    }
+}

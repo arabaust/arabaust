@@ -1,0 +1,45 @@
+<?php
+
+// Stations CRUD
+get('stations', [
+    'uses' => 'StationsController@index',
+    'as' => 'stations.index',
+    'permission' => 'stations',
+    'menuItem' => ['icon' => 'md md-radio', 'title' => 'Stations']
+]);
+
+get('stations/create', [
+    'uses' => 'StationsController@create',
+    'as' => 'stations.create',
+    'permission' => 'stations'
+]);
+
+post('stations', [
+    'uses' => 'StationsController@store',
+    'as' => 'stations.store',
+    'permission' => 'stations'
+]);
+
+get('stations/{id}', [
+    'uses' => 'StationsController@show',
+    'as' => 'stations.show',
+    'permission' => 'stations'
+]);
+
+get('stations/{id}/edit', [
+    'uses' => 'StationsController@edit',
+    'as' => 'stations.edit',
+    'permission' => 'stations'
+]);
+
+put('stations/{id}', [
+    'uses' => 'StationsController@update',
+    'as' => 'stations.update',
+    'permission' => 'stations'
+]);
+
+post('stations/{id}/delete', [
+    'uses' => 'StationsController@destroy',
+    'as' => 'stations.destroy',
+    'permission' => 'stations'
+]);

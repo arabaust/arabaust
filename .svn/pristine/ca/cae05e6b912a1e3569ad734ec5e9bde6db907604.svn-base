@@ -1,0 +1,81 @@
+<?php
+
+namespace Admailer\Http\Requests;
+
+use Admailer\Http\Requests\Request;
+use Auth;
+use Illuminate\Support\Facades\Route;
+
+class AdRequest extends Request
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+
+        $rules = [
+            'type' => 'required',
+            'title' => 'required',
+            'advertiser_id' => 'required|exists:advertisers,id',
+            'product_id' => 'required|exists:products,id',
+            'campaign_id' => 'required|exists:campaigns,id',
+            'media' => 'required|array'
+        ];
+
+        if ($this->has('media')) {
+            foreach ($this->input('media') as $key => $type) {
+                $rules['media.' . $key . '.title'] = 'required';
+                if ($this->route('ads.create')) $rules['media.' . $key . '.filename'] = 'required';
+            }
+        }
+
+        if ($this->has('additional')) {
+            foreach ($this->input('additional') as $key => $type) {
+                if ($this->route('ads.create')) $rules['additional.' . $key . '.filename'] = 'required';
+            }
+        }
+
+        if ($this->has('stations')) {
+            foreach ($this->input('stations') as $key => $type) {
+                if (isset($this->input('stations')[$key + 1])) {
+                    $rules['stations.' . $key] = 'required|exists:stations,id,organisation_id,' . Auth::user()->organisation_id;
+                }
+            }
+        }
+
+        return $rules;
+    }
+
+    public function messages()
+    {
+        $messages = [];
+
+        if ($this->has('media')) {
+            foreach ($this->input('media') as $key => $val) {
+                $messages['media.' . $key . '.title.required'] = 'The title of the ' . ordinalize($key + 1) . ' media file is required.';
+                $messages['media.' . $key . '.filename.required'] = 'The file of the ' . ordinalize($key + 1) . ' media file is required.';
+            }
+        }
+
+        if ($this->has('additional')) {
+            foreach ($this->input('additional') as $key => $val) {
+                $messages['additional.' . $key . '.filename.required'] = 'The file of the ' . ordinalize($key + 1) . ' additional file is required.';
+            }
+        }
+
+        return $messages;
+    }
+}

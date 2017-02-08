@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateAdMediaTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('ad_media', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('ad_id')->unsigned();
+            $table->string('file_type');
+            $table->string('filename');
+            $table->text('description');
+            $table->string('code');
+            $table->string('title');
+            $table->string('duration');
+            $table->date('first_transmission_date');
+            $table->date('last_transmission_date');
+            $table->string('voice_over');
+            $table->string('studio');
+            $table->date('recording_date');
+            $table->string('producer');
+            $table->string('copywriter');
+            $table->string('music');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('ad_media');
+    }
+}

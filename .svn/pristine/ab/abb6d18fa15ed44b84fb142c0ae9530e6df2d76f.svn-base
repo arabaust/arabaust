@@ -1,0 +1,36 @@
+<?php
+get('/', ['as' => 'home', 'uses' => function () {
+    return view('index');
+}]);
+
+// Authentication routes...
+get('login', 'Auth\AuthController@getLogin');
+post('login', 'Auth\AuthController@postLogin');
+get('logout', 'Auth\AuthController@getLogout');
+
+// Password reset routes...
+post('password/forgot', 'Auth\PasswordController@postEmail');
+get('password/reset/{token}', 'Auth\PasswordController@getReset');
+post('password/reset', 'Auth\PasswordController@postReset');
+
+// Download files routes...
+get('download/files/{key}', 'DownloadController@files');
+get('download/file/{key}', 'DownloadController@file');
+
+// Protected Routes by auth and acl middleware
+Route::group(['middleware' => ['auth', 'acl']], function () {
+    get('dashboard', [
+        'uses' => 'DashboardController@index',
+        'as' => 'dashboard',
+        'permission' => 'dashboard',
+        'menuItem' => ['icon' => 'md md-dashboard', 'title' => 'Dashboard']
+    ]);
+
+    // Dynamically include all files in the routes directory
+    foreach (new DirectoryIterator(__DIR__ . '/Routes') as $file) {
+        if (!$file->isDot() && !$file->isDir() && $file->getFilename() != '.gitignore') {
+            require_once __DIR__ . '/Routes/' . $file->getFilename();
+        }
+    }
+
+});

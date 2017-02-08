@@ -1,0 +1,9 @@
+#How to install Admailer from the SVN
+
+1. in the CLI, type composer update
+2. then type npm install
+3. duplicate the .env.example and rename it to .env
+4. Edit the .env file according to required settings
+5. in the CLI, type php artisan key:generate
+6. then type php artisan migrate --seed
+⋅⋅* When you need to add data to a predefined table, create a new seeder by typing php artisan make:seed NewRoleSeeder and send it to the database using php artisan db:seed --class=NewRoleSeeder

@@ -1,0 +1,43 @@
+<?php
+
+namespace Admailer\Models;
+
+use Illuminate\Support\Facades\Auth;
+
+class Station extends BaseModel
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'contact_name', 'phone_number', 'country', 'type', 'organisation_id'];
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        static::creating(function ($station) {
+            $station->organisation_id = Auth::user()->organisation_id;
+        });
+    }
+
+    public function emails()
+    {
+        return $this->hasMany('Admailer\Models\StationEmail');
+    }
+
+    public function types()
+    {
+        return $this->hasMany('Admailer\Models\StationType');
+    }
+
+    public function scopeOfType($query, $type){
+        return $query->whereHas('types', function($query) use ($type) {
+            $query->where('type', $type);
+        });
+    }
+}

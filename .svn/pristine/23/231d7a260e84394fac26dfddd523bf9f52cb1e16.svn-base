@@ -1,0 +1,45 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ $station->name }}</h2>
+        </div>
+
+        <div class="card-body card-padding">
+            <div class="row">
+                <div class="col-sm-4 m-b-20">
+                    <p class="f-500 m-b-20 c-black">Details</p>
+
+                    <ul class="list-group">
+                        <li class="list-group-item">{{ $station->contact_name }}</li>
+                        <li class="list-group-item">{{ $station->country }}</li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-4 m-b-20">
+                    <p class="f-500 m-b-20 c-black">Types</p>
+
+                    <ul class="list-group">
+                        @foreach($station->types as $type)
+                            <li class="list-group-item">{{ $type->type }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="col-sm-4 m-b-20">
+                    <p class="f-500 m-b-20 c-black">Emails</p>
+
+                    <ul class="list-group">
+                        @foreach($station->emails as $email)
+                            <li class="list-group-item">{{ $email->email }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+
+            </div>
+
+            <a class="btn btn-info btn-sm" href="{{ url('stations') }}">Back</a>
+        </div>
+    </div>
+@endsection

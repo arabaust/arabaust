@@ -1,0 +1,58 @@
+<?php
+
+namespace Admailer\Creators;
+
+
+use Admailer\Models\Station;
+use Admailer\Models\StationEmail;
+use Admailer\Models\StationType;
+
+class StationCreator
+{
+
+    public function store($request)
+    {
+        $types = array_map(function ($type) {
+            return new StationType(['type' => $type]);
+        }, $request['types']);
+
+        array_pop($request['emails']);
+        $emails = array_map(function ($email) {
+            return new StationEmail(['email' => $email]);
+        }, $request['emails']);
+
+        $station = Station::create($request);
+
+        $station->types()->saveMany($types);
+        $station->emails()->saveMany($emails);
+    }
+
+    public function update($request, $id){
+        $station = Station::findOrFail($id);
+
+        StationType::where('station_id', $id)->delete();
+        StationEmail::where('station_id', $id)->delete();
+
+        $types = array_map(function ($type) {
+            return new StationType(['type' => $type]);
+        }, $request['types']);
+
+        array_pop($request['emails']);
+        $emails = array_map(function ($email) {
+            return new StationEmail(['email' => $email]);
+        }, $request['emails']);
+
+        $station->update($request);
+
+        $station->types()->saveMany($types);
+        $station->emails()->saveMany($emails);
+
+    }
+
+    public function delete($id){
+        StationType::where('station_id', $id)->delete();
+        StationEmail::where('station_id', $id)->delete();
+        return Station::destroy($id);
+    }
+
+}

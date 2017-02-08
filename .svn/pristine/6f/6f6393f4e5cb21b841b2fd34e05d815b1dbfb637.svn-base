@@ -1,0 +1,39 @@
+<?php
+
+// Advertisers CRUD
+get('products', [
+    'uses' => 'ProductsController@index',
+    'as' => ' products.index',
+    'permission' => 'products',
+    'menuItem' => ['icon' => 'md md-view-carousel', 'title' => 'Products']
+]);
+
+get('products/create', [
+    'uses' => 'ProductsController@create',
+    'as' => ' products.create',
+    'permission' => 'products'
+]);
+
+post('products', [
+    'uses' => 'ProductsController@store',
+    'as' => ' products.store',
+    'permission' => 'products'
+]);
+
+get('products/{id}/edit', [
+    'uses' => 'ProductsController@edit',
+    'as' => ' products.edit',
+    'permission' => 'products'
+]);
+
+put('products/{id}', [
+    'uses' => 'ProductsController@update',
+    'as' => ' products.update',
+    'permission' => 'products'
+]);
+
+post('adv/{id}/delete', [
+    'uses' => 'ProductsController@destroy',
+    'as' => ' products.destroy',
+    'permission' => 'products'
+]);

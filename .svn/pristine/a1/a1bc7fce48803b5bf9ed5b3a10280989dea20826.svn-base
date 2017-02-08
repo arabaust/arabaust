@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class UsersTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('users')->insert([
+            'username' => 'superadmin',
+            'email' => 'superadmin@vidatum.com',
+            'password' => bcrypt('123456'),
+            'first_name' => 'superadmin',
+            'last_name' => 'superadmin',
+            'role_id' => '1',
+            'organisation_id' => '1'
+        ]);
+
+        DB::table('users')->insert([
+            'username' => 'admin',
+            'email' => 'admin@vidatum.com',
+            'password' => bcrypt('123456'),
+            'first_name' => 'admin',
+            'last_name' => 'admin',
+            'role_id' => '2',
+            'organisation_id' => '1'
+        ]);
+
+        DB::table('users')->insert([
+            'username' => 'user',
+            'email' => 'user@vidatum.com',
+            'password' => bcrypt('123456'),
+            'first_name' => 'user',
+            'last_name' => 'user',
+            'role_id' => '3',
+            'organisation_id' => '1'
+        ]);
+    }
+}

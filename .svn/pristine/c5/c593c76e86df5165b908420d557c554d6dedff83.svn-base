@@ -1,0 +1,111 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Http\Requests\AdRequest;
+use Admailer\Repositories\AdRepository;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+use Input;
+
+class AdController extends Controller
+{
+    /**
+     * @var AdRepository
+     */
+    private $repository;
+
+    /**
+     * @param AdRepository $repository
+     */
+    public function __construct(AdRepository $repository)
+    {
+
+        $this->repository = $repository;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $ads = $this->repository->all();
+        return view('ad.index', compact('ads'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param $type
+     * @return Response
+     */
+    public function create($type)
+    {
+        $advertisers = $this->repository->advertisers();
+        return view('ad.create', compact(['type', 'advertisers']));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param $request
+     * @return Response
+     */
+    public function store(AdRequest $request)
+    {
+        dd($request->all());
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        //
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProducts()
+    {
+        return $this->repository->products(Input::get('id'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCampaigns()
+    {
+        return $this->repository->campaigns(Input::get('id'));
+    }
+}

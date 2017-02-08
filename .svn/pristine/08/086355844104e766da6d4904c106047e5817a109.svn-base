@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col-sm-5">
+        <div class="card dual-list list-left">
+            <div class="card-header ch-alt">
+                <h2>Stations Added<small>
+                        <div class="fg-line">
+                            <input type="text" name="SearchDualList" class="form-control" placeholder="search"/>
+                        </div>
+                    </small></h2>
+
+                <ul class="actions">
+                    <li>
+                        <a class="selector" title="select all"><i
+                                    class="md md-check-box-outline-blank"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-body text-right">
+                <ul class="list-group station-groups">
+                    {{--@foreach($stationgroup->stations as $station)--}}
+                        {{--<li class="list-group-item" data-id="{{ $station->id }}">{{ $station->name }}</li>--}}
+                    {{--@endforeach--}}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-2">
+        <div class="list-arrows text-center">
+            <button class="btn btn-default btn-sm move-left">
+                <span class="md md-chevron-left md-2x"></span>
+            </button>
+
+            <button class="btn btn-default btn-sm move-right">
+                <span class="md md-chevron-right md-2x"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="col-sm-5">
+        <div class="card dual-list list-right">
+            <div class="card-header ch-alt">
+                <h2>Stations Available <small>
+                        <div class="fg-line">
+                            <input type="text" name="SearchDualList" class="form-control" placeholder="search"/>
+                        </div>
+                    </small></h2>
+
+                <ul class="actions">
+                    <li>
+                        <a class="selector" title="select all"><i
+                                    class="md md-check-box-outline-blank"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-body">
+                <ul class="list-group">
+                    {{--@foreach($stations as $station)--}}
+                        {{--<li class="list-group-item" data-id="{{ $station->id }}">{{ $station->name }}</li>--}}
+                    {{--@endforeach--}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

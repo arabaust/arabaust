@@ -1,0 +1,177 @@
+<a href="#modalMediaFiles" class="btn btn-sm btn-default add_media_files">Add a new media file</a>
+<table class="table table-striped table-vmiddle m-t-30" id="media-table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>&nbsp</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<div class="modal fade" id="modalMediaFiles" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add a file</h4>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- File Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('media[0][filename]', 'File:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::file('media[0][filename]', ['class' => 'form-control input-sm']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- Title Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('title', 'File Title:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][title]', null, ['class' => 'form-control input-sm']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- Code Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('code', 'File Code:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][code]', null, ['class' => 'form-control input-sm']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- Duration Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('duration', 'Duration:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][duration]', null, ['class' => 'form-control input-sm
+                                    input-mask', 'data-mask' => '00:00:00', 'placeholder' => 'eg: hh:mm:ss', 'maxlength'
+                                    => 8]) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- Start_date Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('start_date', 'Start Date:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][start_date]', null, ['class' => 'form-control input-sm
+                                    date-picker']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- End_date Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('end_date', 'End Date:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][end_date]', null, ['class' => 'form-control input-sm
+                                    date-picker']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- Voice_over Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('voice_over', 'Voiceover:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][voice_over]', null, ['class' => 'form-control input-sm'])
+                                    !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- Studio Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('studio', 'Studio:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][studio]', null, ['class' => 'form-control input-sm']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- Recording_date Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('recording_date', 'Recording Date:', ['class' => 'col-sm-2
+                            control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][recording_date]', null, ['class' => 'form-control input-sm
+                                    date-picker']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- Producer Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('producer', 'Producer:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][producer]', null, ['class' => 'form-control input-sm']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- Copywriter Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('copywriter', 'Copywriter:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][copywriter]', null, ['class' => 'form-control input-sm'])
+                                    !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- Music Form Input -->
+                        <div class="form-group">
+                            {!! Form::label('music', 'Music:', ['class' => 'col-sm-2 control-label']) !!}
+                            <div class="col-sm-10">
+                                <div class="fg-line">
+                                    {!! Form::text('media[0][music]', null, ['class' => 'form-control input-sm']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link save-file">Save file</button>
+                <button type="button" class="btn btn-link" data-dismiss="modal">Do not save</button>
+            </div>
+        </div>
+    </div>
+</div>

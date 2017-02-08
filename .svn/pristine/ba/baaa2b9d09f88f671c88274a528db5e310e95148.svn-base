@@ -1,0 +1,39 @@
+<?php
+
+// Campaigns CRUD
+get('campaigns', [
+    'uses' => 'CampaignsController@index',
+    'as' => 'campaigns.index',
+    'permission' => 'campaigns',
+    'menuItem' => ['icon' => 'md md-group-work', 'title' => 'Campaigns']
+]);
+
+get('campaigns/create', [
+    'uses' => 'CampaignsController@create',
+    'as' => 'campaigns.create',
+    'permission' => 'campaigns'
+]);
+
+post('campaigns', [
+    'uses' => 'CampaignsController@store',
+    'as' => 'campaigns.store',
+    'permission' => 'campaigns'
+]);
+
+get('campaigns/{id}/edit', [
+    'uses' => 'CampaignsController@edit',
+    'as' => 'campaigns.edit',
+    'permission' => 'campaigns'
+]);
+
+put('campaigns/{id}', [
+    'uses' => 'CampaignsController@update',
+    'as' => 'campaigns.update',
+    'permission' => 'campaigns'
+]);
+
+post('campaigns/{id}/delete', [
+    'uses' => 'CampaignsController@destroy',
+    'as' => 'campaigns.destroy',
+    'permission' => 'campaigns'
+]);

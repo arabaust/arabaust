@@ -1,0 +1,29 @@
+APP_ENV=local
+APP_DEBUG=true
+APP_KEY=t9f72lKwhgbJomJ6TdUhWilESFKLP8Zv
+
+DB_HOST=vidatum.dev
+DB_DATABASE=admailer_new
+DB_USERNAME=vidatum
+DB_PASSWORD=diabcenter
+
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_DRIVER=sync
+
+MAIL_DRIVER=smtp
+MAIL_HOST=localhost
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_ADDRESS=admin@admailer.com
+MAIL_NAME=Admailer
+
+#if MAIL_DRIVER=ses then fill and uncomment these values
+#SES_KEY=
+#SES_SECRET=
+#SES_REGION=
+
+# Custom settings
+APP_URL=http://admailer.new

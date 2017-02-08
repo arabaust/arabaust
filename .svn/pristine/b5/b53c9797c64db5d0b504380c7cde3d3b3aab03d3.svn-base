@@ -1,0 +1,85 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Http\Requests\AdvertiserRequest;
+use Admailer\Models\Advertiser;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+
+class AdvertisersController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $advertisers = Advertiser::organisation()->get();
+        return view('advertisers.index', compact('advertisers'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return view('advertisers.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param AdvertiserRequest $request
+     * @return Response
+     */
+    public function store(AdvertiserRequest $request)
+    {
+        Advertiser::create($request->all());
+        flash()->success('Advertiser created!');
+        return redirect('advertisers');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $advertiser = Advertiser::findOrFail($id);
+
+        return view('advertisers.edit', compact('advertiser'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @param AdvertiserRequest $request
+     * @return Response
+     */
+    public function update($id, AdvertiserRequest $request)
+    {
+        Advertiser::findOrFail($id)->update($request->all());
+        flash()->success('Advertiser updated!');
+        return redirect('advertisers');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        return Advertiser::destroy($id);
+    }
+}

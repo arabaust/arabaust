@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::open(['method' => 'POST', 'url' => 'organisations', 'class' => 'form-horizontal']) !!}
+            <div class="card-header">
+                <h2>Add an Organisation</h2>
+            </div>
+
+            @include('organisations.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

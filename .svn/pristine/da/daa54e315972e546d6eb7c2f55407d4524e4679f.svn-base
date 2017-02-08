@@ -1,0 +1,64 @@
+<?php
+
+namespace Admailer\Models;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+
+class Media extends Model
+{
+    protected $table = 'ad_media';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'ad_id',
+        'file_type',
+        'filename',
+        'description',
+        'code',
+        'title',
+        'duration',
+        'first_transmission_date',
+        'last_transmission_date',
+        'voice_over',
+        'studio',
+        'recording_date',
+        'producer',
+        'copywriter',
+        'music'
+    ];
+
+    public function getFirstTransmissionDateAttribute($value)
+    {
+        return Carbon::createFromFormat('Y-m-d' , $value)->format('d/m/Y');
+    }
+
+    public function setFirstTransmissionDateAttribute($value)
+    {
+        $this->attributes['first_transmission_date'] = Carbon::createFromFormat('d/m/Y' , $value)->toDateString();
+    }
+
+    public function getLastTransmissionDateAttribute($value)
+    {
+        return Carbon::createFromFormat('Y-m-d' , $value)->format('d/m/Y');
+    }
+
+    public function setLastTransmissionDateAttribute($value)
+    {
+        $this->attributes['last_transmission_date'] = Carbon::createFromFormat('d/m/Y' , $value)->toDateString();
+    }
+
+    public function getRecordingDateAttribute($value)
+    {
+        return Carbon::createFromFormat('Y-m-d' , $value)->format('d/m/Y');
+    }
+
+    public function setRecordingDateAttribute($value)
+    {
+        $this->attributes['recording_date'] = Carbon::createFromFormat('d/m/Y' , $value)->toDateString();
+    }
+}

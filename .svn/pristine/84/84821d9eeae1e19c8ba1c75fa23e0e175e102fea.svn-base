@@ -1,0 +1,57 @@
+<!-- Title Form Input -->
+<div class="form-group">
+    {!! Form::label('title', 'Title:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        <div class="fg-line">
+            {!! Form::text('title', null, ['class' => 'form-control input-sm']) !!}
+        </div>
+    </div>
+</div>
+<!-- Code Form Input -->
+<div class="form-group">
+    {!! Form::label('code', 'Code:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        <div class="fg-line">
+            {!! Form::text('code', null, ['class' => 'form-control input-sm']) !!}
+        </div>
+    </div>
+</div>
+<!-- Advertiser_id Form Input -->
+<div class="form-group">
+    {!! Form::label('advertiser_id', 'Client:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        <div class="fg-line">
+            {!! Form::select('advertiser_id', $advertisers, null, ['class' => 'form-control input-sm tag-select']) !!}
+        </div>
+    </div>
+</div>
+
+<!-- Product_id Form Input -->
+<div class="form-group">
+    {!! Form::label('product_id', 'Product:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        <div class="fg-line">
+            {!! Form::select('product_id', [], null, ['class' => 'form-control input-sm tag-select', 'data-id' => (isset($ad) AND !is_null($ad->product_id)) ? $ad->product_id : '']) !!}
+        </div>
+    </div>
+</div>
+
+<!-- Campaign_id Form Input -->
+<div class="form-group">
+    {!! Form::label('campaign_id', 'Campaign:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        <div class="fg-line">
+            {!! Form::select('campaign_id', [], null, ['class' => 'form-control input-sm tag-select', 'data-id' => (isset($ad) AND !is_null($ad->campaign_id)) ? $ad->campaign_id : '']) !!}
+        </div>
+    </div>
+</div>
+
+<!-- Message Form Input -->
+<div class="form-group">
+    {!! Form::label('message', 'Message:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        <div class="fg-line">
+            {!! Form::textarea('message', null, ['class' => 'form-control html-editor', 'rows' => 1]) !!}
+        </div>
+    </div>
+</div>

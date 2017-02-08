@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::model($stationgroup, ['method' => 'put', 'url' => '/stationgroups/' . $stationgroup->id, 'class' => 'form-horizontal']) !!}
+        <div class="card-header">
+            <h2>Edit {{ $stationgroup->name }}</h2>
+        </div>
+
+        @include('stationgroups.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

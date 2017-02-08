@@ -1,0 +1,108 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Http\Requests\StationGroupRequest;
+use Admailer\Models\Station;
+use Admailer\Models\StationGroup;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
+
+class StationGroupController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $stationgroups = StationGroup::organisation()->get();
+        return view('stationgroups.index', compact('stationgroups'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return view('stationgroups.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StationGroupRequest $groupRequest
+     * @return Response
+     */
+    public function store(StationGroupRequest $groupRequest)
+    {
+        StationGroup::create($groupRequest->all());
+        flash()->success('Station group created!');
+        return redirect('stationgroups');
+    }
+
+    /**
+     * Manage the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function manage($id)
+    {
+        $stationgroup = StationGroup::with('stations')->findOrFail($id);
+        $stations = Station::organisation()->ofType($stationgroup->type)->whereNotIn('id', $stationgroup->stations)->get();
+
+        return view('stationgroups.manage', compact('stationgroup', 'stations'));
+    }
+
+    public function postManage($id)
+    {
+        $stationgroup = StationGroup::findOrFail($id);
+        $stationgroup->stations()->sync(Input::get('stations', []));
+        flash()->success('Station group updated!');
+        return true;
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $stationgroup = StationGroup::findOrFail($id);
+        return view('stationgroups.edit', compact('stationgroup'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @param StationGroupRequest $groupRequest
+     * @return Response
+     */
+    public function update($id, StationGroupRequest $groupRequest)
+    {
+        StationGroup::findOrFail($id)->update($groupRequest->all());
+        flash()->success('Station group updated!');
+        return redirect('stationgroups');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        return StationGroup::destroy($id);
+    }
+}

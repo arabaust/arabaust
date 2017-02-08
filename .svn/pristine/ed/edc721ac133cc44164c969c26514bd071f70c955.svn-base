@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::open(['method' => 'POST', 'url' => 'advertisers', 'class' => 'form-horizontal']) !!}
+        <div class="card-header">
+            <h2>Add an advertiser</h2>
+        </div>
+
+        @include('advertisers.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

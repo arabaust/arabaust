@@ -1,0 +1,37 @@
+<?php
+
+namespace Admailer\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
+class Advertiser extends BaseModel
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'organisation_id'];
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        if(!Auth::user()) return;
+        static::creating(function ($advertiser) {
+            $advertiser->organisation_id = Auth::user()->organisation_id;
+        });
+    }
+
+    public function products(){
+        return $this->hasMany('Admailer\Models\Product');
+    }
+
+    public function campaigns(){
+        return $this->hasMany('Admailer\Models\Campaign');
+    }
+}

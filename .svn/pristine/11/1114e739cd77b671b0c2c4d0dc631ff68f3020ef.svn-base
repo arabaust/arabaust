@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::model($advertiser, ['method' => 'put', 'url' => '/advertisers/' . $advertiser->id, 'class' => 'form-horizontal']) !!}
+            <div class="card-header">
+                <h2>Edit {{ $advertiser->name }}</h2>
+            </div>
+
+            @include('advertisers.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

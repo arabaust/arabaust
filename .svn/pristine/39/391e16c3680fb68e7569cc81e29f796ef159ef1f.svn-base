@@ -1,0 +1,82 @@
+<?php
+
+namespace Admailer\Repositories;
+
+
+use Admailer\Models\Ad;
+use Admailer\Models\Advertiser;
+use Admailer\Models\Campaign;
+use Admailer\Models\Media;
+use Admailer\Models\Product;
+use Admailer\Models\Recipient;
+use Admailer\Models\Station;
+use Admailer\Models\StationGroup;
+
+class AdRepository
+{
+
+    public function all()
+    {
+        return Ad::with(['advertiser', 'product', 'campaign', 'media', 'additional', 'recipients'])->organisation()->get();
+    }
+
+    public function get($id)
+    {
+        return Ad::with(['advertiser', 'product', 'campaign', 'media', 'additional', 'recipients'])->organisation()->findOrFail($id);
+    }
+
+    public function advertisers()
+    {
+        return Advertiser::organisation()->lists('name', 'id');
+    }
+
+    public function products($advertiser_id)
+    {
+        return Product::where('advertiser_id', $advertiser_id)->lists('name', 'id');
+    }
+
+    public function campaigns($advertiser_id)
+    {
+        return Campaign::where('advertiser_id', $advertiser_id)->lists('name', 'id');
+    }
+
+    public function stationgroups()
+    {
+        return StationGroup::organisation()->lists('name', 'id');
+    }
+
+    public function stations($group_id)
+    {
+        return StationGroup::findOrFail($group_id)->stations->lists('name', 'id');
+    }
+
+    public function recipients($id)
+    {
+        $stations = [];
+        foreach (Recipient::with('email')->where('ad_id', $id)->get() as $recipient) {
+            $id = $recipient->email->station->id;
+            if (!in_array($id, $stations))
+                $stations[] = $id;
+        }
+
+        $recipients = array_map(function($id) {
+            return Station::findOrFail($id);
+        }, $stations);
+
+        return $recipients;
+    }
+
+    public function getMedia($id)
+    {
+        return $media = Media::where('ad_id', $id)->get();
+    }
+
+    public function stationsEmails($id)
+    {
+        foreach (Recipient::with('email')->where('ad_id', $id)->get() as $recipient) {
+            $recipients[$recipient->email->station->name][] = $recipient->email->email;
+        }
+        return $recipients;
+    }
+
+}

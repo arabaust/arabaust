@@ -1,0 +1,108 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Creators\UserCreator;
+use Admailer\Http\Requests\StoreUserRequest;
+use Admailer\Http\Requests\UpdateUserRequest;
+use Admailer\Models\Role;
+use Admailer\Models\User;
+use Admailer\Repositories\UserRepository;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+
+class UsersController extends Controller
+{
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+    /**
+     * @var UserCreator
+     */
+    private $userCreator;
+
+    public function __construct(UserRepository $userRepository, UserCreator $userCreator)
+    {
+
+        $this->userRepository = $userRepository;
+        $this->userCreator = $userCreator;
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $users = $this->userRepository->all();
+        return view('users.index', compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $roles = $this->userRepository->roles();
+        $organisations = $this->userRepository->organisations();
+        return view('users.create', compact('roles', 'organisations'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreUserRequest $request
+     * @return Response
+     */
+    public function store(StoreUserRequest $request)
+    {
+        $this->userCreator->store($request);
+        flash()->success('User created!');
+        return redirect('users');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        $roles = $this->userRepository->roles();
+        $organisations = $this->userRepository->organisations();
+        return view('users.edit', compact('user', 'roles', 'organisations'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @param UpdateUserRequest $request
+     * @return Response
+     */
+    public function update($id, UpdateUserRequest $request)
+    {
+        $this->userCreator->update($request);
+        flash()->success('User updated!');
+        return redirect('users');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        return User::destroy($id);
+    }
+}

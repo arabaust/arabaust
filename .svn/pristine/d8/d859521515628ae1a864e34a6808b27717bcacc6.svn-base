@@ -1,0 +1,14 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::model($user, ['method' => 'put', 'url' => '/users/' . $user->id, 'class' => 'form-horizontal']) !!}
+            <div class="card-header">
+                <h2>Edit {{ $user->username }}<small>If you would like to change the password, fill the password fields.</small></h2>
+            </div>
+
+            @include('users.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

@@ -1,0 +1,87 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Http\Requests\CampaignRequest;
+use Admailer\Models\Advertiser;
+use Admailer\Models\Campaign;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+
+class CampaignsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $campaigns = Campaign::with('advertiser')->organisation()->get();
+        return view('campaigns.index', compact('campaigns'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $advertisers = Advertiser::organisation()->lists('name', 'id');
+        return view('campaigns.create', compact('advertisers'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param CampaignRequest $campaignRequest
+     * @return Response
+     */
+    public function store(CampaignRequest $request)
+    {
+        Campaign::create($request->all());
+        flash()->success('Campaign created!');
+        return redirect('campaigns');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $campaign = Campaign::findOrFail($id);
+        $advertisers = Advertiser::organisation()->lists('name', 'id');
+        return view('campaigns.edit', compact('campaign', 'advertisers'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param CampaignRequest $request
+     * @param  int $id
+     * @return Response
+     */
+    public function update(CampaignRequest $request, $id)
+    {
+        Campaign::findOrFail($id)->update($request->all());
+        flash()->success('Campaign updated!');
+        return redirect('campaigns');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        return Campaign::destroy($id);
+    }
+}

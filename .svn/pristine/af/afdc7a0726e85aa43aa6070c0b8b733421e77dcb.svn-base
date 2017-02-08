@@ -1,0 +1,18 @@
+var mf = new Vue({
+    el: '#media_files_vue',
+    data: {},
+    methods: {
+        openModal: function(e) {
+            e.preventDefault();
+            $('#modalMediaFiles').find('input').val('');
+            $('#modalMediaFiles').appendTo('body').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        },
+        addFile: function(e) {
+            e.preventDefault();
+            console.log('addFile');
+        }
+    }
+});

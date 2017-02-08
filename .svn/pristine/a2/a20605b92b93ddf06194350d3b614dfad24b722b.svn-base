@@ -1,0 +1,109 @@
+<?php
+
+namespace Admailer\Http\Controllers;
+
+use Admailer\Creators\StationCreator;
+use Admailer\Http\Requests\StationRequest;
+use Admailer\Models\Station;
+use Illuminate\Http\Request;
+
+use Admailer\Http\Requests;
+use Admailer\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
+class StationsController extends Controller
+{
+    /**
+     * @var StationCreator
+     */
+    private $stationCreator;
+
+    public function __construct(StationCreator $stationCreator)
+    {
+
+        $this->stationCreator = $stationCreator;
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $stations = Station::organisation()->get();
+        return view('stations.index', compact('stations'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $countries = countriesArray();
+        return view('stations.create', compact('countries'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StationRequest $request
+     * @return Response
+     */
+    public function store(StationRequest $request)
+    {
+        $this->stationCreator->store($request->all());
+        flash()->success('Station created!');
+        return redirect('stations');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        $station = Station::with(['types', 'emails'])->findOrFail($id);
+        return view('stations.view',compact('station'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $countries = countriesArray();
+        $station = Station::with(['types', 'emails'])->findOrFail($id);
+        return view('stations.edit',compact('station', 'countries'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id, StationRequest $request)
+    {
+        $this->stationCreator->update($request->all(), $id);
+        flash()->success('Station updated!');
+        return redirect('stations');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        $this->stationCreator->delete($id);
+    }
+}

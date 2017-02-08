@@ -1,0 +1,51 @@
+<?php
+
+// Organisations CRUD
+get('stationgroups', [
+    'uses' => 'StationGroupController@index',
+    'as' => 'stationgroups.index',
+    'permission' => 'stationgroups',
+    'menuItem' => ['icon' => 'md md-group-work', 'title' => 'Stations Groups']
+]);
+
+get('stationgroups/create', [
+    'uses' => 'StationGroupController@create',
+    'as' => 'stationgroups.create',
+    'permission' => 'stationgroups'
+]);
+
+post('stationgroups', [
+    'uses' => 'StationGroupController@store',
+    'as' => 'stationgroups.store',
+    'permission' => 'stationgroups'
+]);
+
+get('stationgroups/{id}', [
+    'uses' => 'StationGroupController@manage',
+    'as' => 'stationgroups.manage',
+    'permission' => 'stationgroups'
+]);
+
+post('stationgroups/{id}/manage', [
+    'uses' => 'StationGroupController@postManage',
+    'as' => 'stationgroups.manage',
+    'permission' => 'stationgroups'
+]);
+
+get('stationgroups/{id}/edit', [
+    'uses' => 'StationGroupController@edit',
+    'as' => 'stationgroups.edit',
+    'permission' => 'stationgroups'
+]);
+
+put('stationgroups/{id}', [
+    'uses' => 'StationGroupController@update',
+    'as' => 'stationgroups.update',
+    'permission' => 'stationgroups'
+]);
+
+post('stationgroups/{id}/delete', [
+    'uses' => 'StationGroupController@destroy',
+    'as' => 'stationgroups.destroy',
+    'permission' => 'stationgroups'
+]);

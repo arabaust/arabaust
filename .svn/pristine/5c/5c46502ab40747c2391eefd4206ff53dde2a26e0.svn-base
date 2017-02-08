@@ -1,0 +1,81 @@
+<?php
+
+// Ads CRUD
+get('ads', [
+    'uses' => 'AdController@index',
+    'as' => ' ads.index',
+    'permission' => 'ad',
+    'menuItem' => ['icon' => 'md md-star', 'title' => 'Ads']
+]);
+
+get('ads/create/{type}', [
+    'uses' => 'AdController@create',
+    'as' => ' ads.create',
+    'permission' => 'ad'
+])->where('type', '(radio|tv|vod)');
+
+post('ads', [
+    'uses' => 'AdController@store',
+    'as' => ' ads.store',
+    'permission' => 'ad'
+]);
+
+get('ads/{id}', [
+    'uses' => 'AdController@show',
+    'as' => ' ads.show',
+    'permission' => 'ad'
+]);
+
+get('ads/{id}/edit', [
+    'uses' => 'AdController@edit',
+    'as' => ' ads.edit',
+    'permission' => 'ad'
+]);
+
+put('ads/{id}', [
+    'uses' => 'AdController@update',
+    'as' => ' ads.update',
+    'permission' => 'ad'
+]);
+
+post('adv/{id}/delete', [
+    'uses' => 'AdController@destroy',
+    'as' => ' ads.destroy',
+    'permission' => 'ad'
+]);
+
+get('lists/products', [
+    'uses' => 'AdController@getProducts',
+    'as' => ' ads.products',
+    'permission' => 'ad'
+]);
+
+get('lists/campaigns', [
+    'uses' => 'AdController@getCampaigns',
+    'as' => ' ads.campaigns',
+    'permission' => 'ad'
+]);
+
+get('lists/stations', [
+    'uses' => 'AdController@getStations',
+    'as' => ' ads.stations',
+    'permission' => 'ad'
+]);
+
+get('ads/{id}/duplicate', [
+    'uses' => 'AdController@duplicate',
+    'as' => ' ads.duplicate',
+    'permission' => 'ad'
+]);
+
+get('ads/{id}/send', [
+    'uses' => 'AdController@send',
+    'as' => ' ads.send',
+    'permission' => 'ad'
+]);
+
+get('ads/{id}/download/{file_id}', [
+    'uses' => 'AdController@download',
+    'as' => ' ads.download',
+    'permission' => 'ad'
+]);

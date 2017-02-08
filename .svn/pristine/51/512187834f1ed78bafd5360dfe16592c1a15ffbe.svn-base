@@ -1,0 +1,14 @@
+<?php
+
+namespace Admailer\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
+class BaseModel extends Model
+{
+    public function scopeOrganisation($query)
+    {
+        return $query->where('organisation_id', Auth::user()->organisation_id);
+    }
+}

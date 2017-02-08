@@ -1,0 +1,27 @@
+<?php
+
+namespace Admailer\Repositories;
+
+
+use Admailer\Models\Organisation;
+use Admailer\Models\Role;
+use Admailer\Models\User;
+use Illuminate\Support\Facades\Auth;
+
+class UserRepository {
+
+    public function all(){
+        if (Auth::user()->is('superadmin')) return User::with(['organisation', 'role'])->get();
+        return User::with(['organisation', 'role'])->where('organisation_id', Auth::user()->organisation_id)->where('role_id', '!=', 1)->get();
+    }
+
+    public function roles(){
+        if (Auth::user()->is('superadmin')) return Role::orderBy('id', 'desc')->lists('role_title', 'id');
+        return Role::where('role_slug', '!=', 'superadmin')->orderBy('id', 'desc')->lists('role_title', 'id');
+    }
+
+    public function organisations(){
+        return Organisation::orderBy('id', 'desc')->lists('name', 'id');
+    }
+
+}

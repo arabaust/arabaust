@@ -1,0 +1,148 @@
+@extends('app')
+@section('js')
+    $('.panel-heading a').on('click',function(e){
+        console.log('123);
+        if($(this).parents('.panel').children('.panel-collapse').hasClass('in')){
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+@endsection
+
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <h2>Show all ads details.</h2>
+        </div>
+
+        <div class="card-body card-padding">
+            <div class="row">
+                <div class="col-sm-12 m-b-20">
+                    <p class="f-500 m-b-20 c-black">{{ $ad->title }}</p>
+                    <div class="col-sm-6">
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Type: </strong> {{ $ad->type }}</li>
+                            <li class="list-group-item"><strong>Client: </strong>{{ $advertisers->name }}</li>
+                            <li class="list-group-item"><strong>Campaign: </strong>{{ $campaign->name }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Code : </strong>{{ $ad->code }}</li>
+                            <li class="list-group-item"><strong>Product: </strong>{{ $product->name }}</li>
+                            <li class="list-group-item"><strong>message : </strong>{{ $ad->message }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <p class="f-500 m-b-20 c-black">Media Files</p>
+                <div class="accordion panel-group" id="accordion2">
+                    @foreach($files as $media)
+                        @if($media->file_type == 'media')
+                            <div class="accordion-group panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{ $media->title }}">
+                                            {{ $media->title }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="{{ $media->title }}" class="panel-body panel-collapse collapse in">
+                                    <div class="accordion-inner col-sm-6 ">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><strong>File Name : </strong>{{ substr($media->filename, strpos($media->filename, "_") + 1) }}</li>
+                                            <li class="list-group-item"><strong>Description : </strong>{{ $media->description }}</li>
+                                            <li class="list-group-item"><strong>Start Date : </strong>{{ $media->first_transmission_date }}</li>
+                                            <li class="list-group-item"><strong>Voice Over : </strong>{{ $media->voice_over }}</li>
+                                            <li class="list-group-item"><strong>Recording Date : </strong>{{ $media->recording_date }}</li>
+                                            <li class="list-group-item"><strong>Copywriter : </strong>{{ $media->copywriter }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="accordion-inner col-sm-6">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><strong>Code : </strong>{{ $media->code }}</li>
+                                            <li class="list-group-item"><strong>Duration : </strong>{{ $media->duration }}</li>
+                                            <li class="list-group-item"><strong>End Date : </strong>{{ $media->last_transmission_date }}</li>
+                                            <li class="list-group-item"><strong>studio : </strong>{{ $media->studio }}</li>
+                                            <li class="list-group-item"><strong>Producer : </strong>{{ $media->producer }}</li>
+                                            <li class="list-group-item"><strong>Music : </strong>{{ $media->music }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+            <div class="row">
+                <p class="f-500 m-b-20 c-black">Additional Files</p>
+                <div class="accordion panel-group" id="accordion2">
+                    @foreach($files as $additional)
+                        @if($additional->file_type == 'additional')
+                            <div class="accordion-group panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{ $additional->title }}">
+                                            {{ $additional->title }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="{{ $additional->title }}" class="panel-body panel-collapse collapse in ">
+                                    <div class="accordion-inner col-sm-6">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><strong>File Name : </strong>{{ substr($additional->filename, strpos($additional->filename, "_") + 1) }}</li>
+                                            <li class="list-group-item"><strong>Description : </strong>{{ $additional->description }}</li>
+                                            <li class="list-group-item"><strong>Start Date : </strong>{{ $additional->first_transmission_date }}</li>
+                                            <li class="list-group-item"><strong>Voice Over : </strong>{{ $additional->voice_over }}</li>
+                                            <li class="list-group-item"><strong>Recording Date : </strong>{{ $additional->recording_date }}</li>
+                                            <li class="list-group-item"><strong>Copywriter : </strong>{{ $additional->copywriter }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="accordion-inner col-sm-6">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><strong>Code : </strong>{{ $additional->code }}</li>
+                                            <li class="list-group-item"><strong>Duration : </strong>{{ $additional->duration }}</li>
+                                            <li class="list-group-item"><strong>End Date : </strong>{{ $additional->last_transmission_date }}</li>
+                                            <li class="list-group-item"><strong>studio : </strong>{{ $additional->studio }}</li>
+                                            <li class="list-group-item"><strong>Producer : </strong>{{ $additional->producer }}</li>
+                                            <li class="list-group-item"><strong>Music : </strong>{{ $additional->music }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+            <div class="row">
+                <p class="f-500 m-b-20 c-black">Recipients</p>
+                <div class="accordion panel-group" id="accordion2">
+                    @foreach($stations_emails as $key => $station)
+                        <div class="accordion-group panel panel-info col-sm-6">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{ $key }}">
+                                        {{ $key }}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="{{ $key }}" class="panel-body panel-collapse collapse in">
+                                @foreach($station as $email)
+                                <div class="accordion-inner col-sm-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">{{ $email }}</li>
+                                    </ul>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <a class="btn btn-info btn-sm" href="{{ url('ads') }}">Back</a>
+            <a class="btn btn-primary btn-sm" href="">Send</a>
+        </div>
+    </div>
+@endsection

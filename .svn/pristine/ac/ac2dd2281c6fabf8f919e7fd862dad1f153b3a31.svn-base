@@ -1,0 +1,93 @@
+@extends('app')
+
+@section('js')
+    var datatable = $("#data-table-command");
+    datatable.bootgrid({
+        css: {
+            icon: 'md icon',
+            iconColumns: 'md-view-module',
+            iconDown: 'md-expand-more',
+            iconRefresh: 'md-refresh',
+            iconUp: 'md-expand-less'
+        },
+        formatters: {
+            "commands": function(column, row) {
+                return '<button class="btn btn-icon command-show" data-row-id="' + row.id + '"><span class="md md-radio"></span></button> ' +
+                '<button class="btn btn-icon command-edit" data-row-id="' + row.id + '"><span class="md md-edit"></span></button> ' +
+                '<button type="button" class="btn btn-icon command-delete" data-row-id="' + row.id + '"><span class="md md-delete"></span></button>';
+            }
+        }
+    }).on('loaded.rs.jquery.bootgrid', function() {
+        $('.command-show').on('click', function(e) {
+            e.preventDefault()
+            window.location.href = '{{ url('stationgroups') }}/' + $(this).data('row-id');
+        });
+        $('.command-edit').on('click', function(e) {
+            e.preventDefault()
+            window.location.href = '{{ url('stationgroups') }}/' + $(this).data('row-id') + '/edit';
+        });
+        $('.command-delete').on('click', function(e) {
+            e.preventDefault();
+            var rowId = $(this).data('row-id');
+            var url = '{{ url('stationgroups') }}/' + rowId + '/delete';
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this group!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function(){
+                $.post(url, {
+                    _token: '{{ csrf_token() }}'
+                }, function() {
+                    datatable.bootgrid('remove', [rowId]);
+                    swal("Deleted!", "The group has been deleted.", "success");
+                });
+            });
+        });
+    });
+@endsection
+
+@section('content')
+    <div class="block-header">
+        <h2>Stations Groups</h2>
+
+        <ul class="actions">
+            <li>
+                <a href="{{ url('/stationgroups/create') }}">
+                    <i class="md md-add"></i>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+        </div>
+
+        <table id="data-table-command" class="table table-striped table-vmiddle">
+            <thead>
+            <tr>
+                <th data-column-id="id" data-type="numeric" data-identifier="true">ID</th>
+                <th data-column-id="name" data-order="desc">Name</th>
+                <th data-column-id="type">Type</th>
+                <th data-column-id="description">Description</th>
+                <th data-column-id="commands" data-formatter="commands" data-sortable="false">Commands</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($stationgroups as $group)
+                <tr>
+                    <td>{{ $group->id }}</td>
+                    <td>{{ $group->name }}</td>
+                    <td>{{ $group->type }}</td>
+                    <td>{{ $group->description }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection

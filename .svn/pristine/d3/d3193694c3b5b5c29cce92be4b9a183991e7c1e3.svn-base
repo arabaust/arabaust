@@ -1,0 +1,157 @@
+<?php
+
+namespace Admailer\Creators;
+
+
+use Admailer\Models\Ad;
+use Admailer\Models\Media;
+use Admailer\Models\Recipient;
+use Admailer\Models\StationEmail;
+
+class AdCreator
+{
+
+    /**
+     * Create an ad
+     *
+     * @param $request
+     */
+    public function create($request)
+    {
+
+        $media_files = [];
+        $additional_files = [];
+
+        foreach ($request['media'] as $key => & $media) {
+            if (!is_null($media['filename'])) {
+                $media_files[] = $media['filename'];
+                $request['media'][$key]['filename'] = time() . '_' . $media['filename']->getClientOriginalName();
+                $request['media'][$key]['file_type'] = 'media';
+            } else {
+                unset($request['media'][$key]);
+            }
+        }
+
+        if (isset($request['additional'])) {
+            foreach ($request['additional'] as $key => & $additional) {
+                if (!is_null($additional['filename'])) {
+                    $additional_files[] = $additional['filename'];
+                    $request['additional'][$key]['filename'] = time() . '_' . $additional['filename']->getClientOriginalName();
+                    $request['additional'][$key]['file_type'] = 'additional';
+                } else {
+                    unset($request['additional'][$key]);
+                }
+            }
+        }
+
+        $ad = Ad::create($request);
+
+        $ad->files()->saveMany(array_map(function ($file) {
+            return new Media($file);
+        }, $request['media']));
+
+        if (isset($request['additional'])) {
+            $ad->files()->saveMany(array_map(function ($file) {
+                return new Media($file);
+            }, $request['additional']));
+        }
+
+        $email_ids = StationEmail::whereIn('station_id', $request['stations'])->get();
+        $recipients = [];
+
+        foreach ($email_ids as $email) {
+            $recipients[] = new Recipient([
+                'ad_id' => $ad->id,
+                'station_email_id' => $email->id,
+            ]);
+        }
+
+        $ad->recipients()->saveMany($recipients);
+
+        foreach ($media_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['media'][$key]['filename']);
+        }
+
+        foreach ($additional_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['additional'][$key]['filename']);
+        }
+
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     */
+    public function update($request, $id)
+    {
+        $media_files = [];
+        $additional_files = [];
+        $media_ids = [];
+
+        foreach ($request['media'] as $key => & $media) {
+            if (!is_null($media['filename'])) {
+                $media_files[] = $media['filename'];
+                $request['media'][$key]['filename'] = time() . '_' . $media['filename']->getClientOriginalName();
+                $request['media'][$key]['file_type'] = 'media';
+            } elseif (is_null($media['filename']) AND isset($request['media'][$key]['id'])) {
+                $media_ids[$key] = $request['media'][$key]['id'];
+            } else {
+                unset($request['media'][$key]);
+            }
+        }
+
+        if (isset($request['additional'])) {
+            foreach ($request['additional'] as $key => & $additional) {
+                if (!is_null($additional['filename'])) {
+                    $additional_files[] = $additional['filename'];
+                    $request['additional'][$key]['filename'] = time() . '_' . $additional['filename']->getClientOriginalName();
+                    $request['additional'][$key]['file_type'] = 'additional';
+                } elseif (is_null($additional['filename']) AND isset($request['additional'][$key]['id'])) {
+                    $media_ids[$key] = $request['additional'][$key]['id'];
+                } else {
+                    unset($request['additional'][$key]);
+                }
+            }
+        }
+
+        Media::where('ad_id', $id)->whereNotIn('id', $media_ids)->delete();
+
+        $ad = Ad::findOrFail($id);
+        $ad->update($request);
+
+        $ad->files()->saveMany(array_map(function ($file) {
+            if (isset($file['id'])) return Media::findOrFail($file['id']);
+            return new Media($file);
+        }, $request['media']));
+
+        if (isset($request['additional'])) {
+            $ad->files()->saveMany(array_map(function ($file) {
+                if (isset($file['id'])) return Media::findOrFail($file['id']);
+                return new Media($file);
+            }, $request['additional']));
+        }
+        Recipient::where('ad_id', $id)->delete();
+        $email_ids = StationEmail::whereIn('station_id', $request['stations'])->get();
+        $recipients = [];
+
+        foreach ($email_ids as $email) {
+            $recipients[] = new Recipient([
+                'ad_id' => $ad->id,
+                'station_email_id' => $email->id,
+            ]);
+        }
+
+        $ad->recipients()->saveMany($recipients);
+
+        foreach ($media_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['media'][$key]['filename']);
+        }
+
+        foreach ($additional_files as $key => $file) {
+            $file->move(public_path('files' . DIRECTORY_SEPARATOR . $ad->id), $request['additional'][$key]['filename']);
+        }
+
+
+    }
+
+}

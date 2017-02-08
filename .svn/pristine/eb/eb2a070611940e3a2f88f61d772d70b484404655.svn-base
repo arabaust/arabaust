@@ -1,0 +1,15 @@
+@extends('app')
+
+@section('content')
+    <div class="card">
+
+        {!! Form::model($ad, ['method' => 'PUT', 'url' => 'ads/' . $ad->id, 'class' => 'form-horizontal', 'files' => true]) !!}
+        {!! Form::hidden('type', null) !!}
+        <div class="card-header">
+            <h2>Edit {{ $ad->title }}</h2>
+        </div>
+
+        @include('ad.form')
+        {!! Form::close() !!}
+    </div>
+@endsection

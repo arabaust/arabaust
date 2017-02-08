@@ -1,0 +1,39 @@
+<?php
+
+// Advertisers CRUD
+get('advertisers', [
+    'uses' => 'AdvertisersController@index',
+    'as' => ' advertisers.index',
+    'permission' => 'advertiser',
+    'menuItem' => ['icon' => 'md md-group', 'title' => 'Advertisers']
+]);
+
+get('advertisers/create', [
+    'uses' => 'AdvertisersController@create',
+    'as' => ' advertisers.create',
+    'permission' => 'advertiser'
+]);
+
+post('advertisers', [
+    'uses' => 'AdvertisersController@store',
+    'as' => ' advertisers.store',
+    'permission' => 'advertiser'
+]);
+
+get('advertisers/{id}/edit', [
+    'uses' => 'AdvertisersController@edit',
+    'as' => ' advertisers.edit',
+    'permission' => 'advertiser'
+]);
+
+put('advertisers/{id}', [
+    'uses' => 'AdvertisersController@update',
+    'as' => ' advertisers.update',
+    'permission' => 'advertiser'
+]);
+
+post('adv/{id}/delete', [
+    'uses' => 'AdvertisersController@destroy',
+    'as' => ' advertisers.destroy',
+    'permission' => 'advertiser'
+]);
