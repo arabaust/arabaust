@@ -4597,7 +4597,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     float: left;
   }
   .navbar-nav > li > a {
-/*    padding-top: 16px;*/
+    padding-top: 16px;
     padding-bottom: 16px;
   }
 }
@@ -8868,6 +8868,7 @@ html {
 }
 body {
   font-weight: 400;
+  padding-top: 65px;
   -webkit-animation-name: fadeIn;
   animation-name: fadeIn;
   -webkit-animation-duration: 1000ms;
@@ -8912,7 +8913,8 @@ h6 small,
 }
 .clist.clist-angle > li:before {
   content: "\f1b6";
-}.clist.clist-check > li:before {
+}
+.clist.clist-check > li:before {
   content: "\f299";
 }
 .clist.clist-star > li:before {
@@ -8921,9 +8923,9 @@ h6 small,
 #main {
   position: relative;
 }
-/*body #content {
+body #content {
   padding: 30px 0;
-}*/
+}
 @media (min-width: 1200px) {
   body.sw-toggled #content {
     padding: 30px 0 30px 250px;
@@ -8935,10 +8937,10 @@ h6 small,
   }
 }
 #header {
-  background: #176fa6;
+  background: #2196f3;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
   height: 65px;
-  position: relative;
+  position: fixed;
   z-index: 10;
   width: 100%;
   left: 0;
@@ -8952,7 +8954,6 @@ h6 small,
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  margin-bottom: 15px;
 }
 #header:not(.sidebar-toggled).header-up {
   -webkit-transform: translate3d(0, -70px, 0);
@@ -8980,6 +8981,8 @@ h6 small,
   display: block;
   font-size: 16px;
   font-weight: 100;
+  background: url("../img/header_logo.png") no-repeat;
+
   background-size: contain;
   margin: -7px 2px;
   width: 170px;
@@ -13236,7 +13239,7 @@ body.login-content:before {
   position: absolute;
   top: 0;
   left: 0;
-  background: #176fa6;
+  background: #adc302;
   content: "";
   z-index: 0;
 }
@@ -14308,7 +14311,7 @@ body.login-content:before {
   overflow: hidden;
   /*
     @media @min-992 {
-	    width: ~"calc(100% + 1px)";
+      width: ~"calc(100% + 1px)";
     }
     */
 }
@@ -15419,12 +15422,12 @@ ul.uk-pagination.uk-pagination-right {
   display: none !important;
 }
 
-/*#main {
+#main {
   width: 100%;
   height: 100%;
   overflow: auto;
   position: relative;
-}*/
+}
 
 .warning{
   color: red;
@@ -15511,6 +15514,7 @@ ul.uk-pagination.uk-pagination-right {
     .dark-green {
       background-color: hsl(148, 100%, 23%) !important;
     }
+
 
       /***************** End Of change dashboard color ************************/
 
